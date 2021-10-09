@@ -24,6 +24,7 @@ FILE *open_file(char *filename)
 BOOL file_checker(char *filename)
 {
     int len = strlen(filename);
+
     if(strcmp(&filename[len - 4], ".in1") == 0)
         return TRUE;
     else
@@ -33,6 +34,7 @@ BOOL file_checker(char *filename)
 void get_header(FILE *fp, int *row, int* column, mode *game_mode, int *i1, int *j1, int *i2, int *j2, int *wall_number)
 {
     char mode_aux[3];
+
     if(fscanf(fp, "%d %d", row, column) != 2) exit(READ_FILE_ERROR);
     if(fscanf(fp, "%d %d", i1, j1) != 2) exit(READ_FILE_ERROR);
     if(fscanf(fp, "%s", mode_aux) != 1) exit(READ_FILE_ERROR);
@@ -47,6 +49,7 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 {
     unsigned int p;
     int i, j, wall;
+
     cell *matrix = init_matrix(row, column);
     for(p = 0; p < wall_number; p++){
         fscanf(fp, "%d %d %d", &i, &j, &wall);
@@ -58,11 +61,14 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 cell *init_matrix(int row, int column)
 {
     unsigned int i;
+    
     cell *matrix = (cell*) malloc(row * column * sizeof(cell)); 
+
     for (i = 0; i < row * column; i++)
     {
         matrix[i].group = i;
         matrix[i].wall = 0;
+        matrix[i].sz = 1;
     }
     return matrix;
 }
