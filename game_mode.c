@@ -6,7 +6,7 @@
 
 BOOL is_cell_in_board(int row, int column, int i, int j)
 {
-    if(i > row || i < 1 || j > column || j < 1)
+    if(i > row - 1 || i < 0 || j > column - 1 || j < 0)
         return FALSE;
     else
         return TRUE;
@@ -19,7 +19,7 @@ void mode_A1(FILE *fp, cell *matrix, int i, int j, int row, int column)
         fprintf(fp, "%d", cell_type);
     }
     else{
-        fprintf(fp, "%d", matrix[get_index(column, i, j)].wall);
+        fprintf(fp, "%d\n\n", matrix[get_index(column, i, j)].wall);
     }
     return;
 }
@@ -37,7 +37,7 @@ void mode_A2(FILE *fp, cell *matrix, int i, int j, int row, int column)
             if(is_white(matrix[get_index(column, i + around_y[p], j + around_y[p])]) == TRUE) flag = 1;
         }
     }
-    fprintf(fp, "%d", flag);
+    fprintf(fp, "%d\n\n", flag);
     return;
 }
 
@@ -51,10 +51,10 @@ void mode_A3(FILE *fp, cell *matrix, int i, int j, int row, int column)
     else{
         for(p = 0; p < 4; p++){
             if(is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE) continue;
-            if(is_grey(matrix[get_index(column, i + around_y[p], j + around_y[p])]) == TRUE) flag = 1;
+            if(is_grey(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE) flag = 1;
         }
     }
-    fprintf(fp, "%d", flag);
+    fprintf(fp, "%d\n\n", flag);
     return;
 }
 
@@ -68,10 +68,10 @@ void mode_A4(FILE *fp, cell *matrix, int i, int j, int row, int column)
     else{
         for(p = 0; p < 4; p++){
             if(is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE) continue;
-            if(is_black(matrix[get_index(column, i + around_y[p], j + around_y[p])]) == TRUE) flag = 1;
+            if(is_black(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE) flag = 1;
         }
     }
-    fprintf(fp, "%d", flag);
+    fprintf(fp, "%d\n\n", flag);
     return;
 }
 
@@ -88,16 +88,21 @@ void mode_A5(FILE *fp, cell *matrix, int i, int j, int row, int column)
             if(is_white(matrix[get_index(column, i + 1, j)]) == TRUE && is_white(matrix[get_index(column, i - 1, j)]) == TRUE)
                 flag = 1;
     }
-    fprintf(fp, "%d", flag);
+    fprintf(fp, "%d\n\n", flag);
     return;
 }
 
 void mode_A6(FILE *fp, cell *matrix, int i1, int j1, int i2, int j2, int row, int column)
 {
     int flag;
-    CWQU(matrix, row, column);
-    flag = same_root(matrix, row, column, i1, j1, i2, j2);
-    fprintf(fp, "%d", flag);
+    if (is_cell_in_board(row, column, i1, j1) == FALSE || is_cell_in_board(row, column, i2, j2) == FALSE){
+        flag = -2;
+    }
+    else{
+        CWQU(matrix, row, column);
+        flag = same_root(matrix, row, column, i1, j1, i2, j2);
+    }
+    fprintf(fp, "%d\n\n", flag);
     return;
 }
 

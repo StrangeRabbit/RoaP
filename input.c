@@ -31,17 +31,20 @@ BOOL file_checker(char *filename)
         return FALSE;
 }
 
-void get_header(FILE *fp, int *row, int* column, mode *game_mode, int *i1, int *j1, int *i2, int *j2, int *wall_number)
+void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, int *wall_number)
 {
     char mode_aux[3];
 
-    if(fscanf(fp, "%d %d", row, column) != 2) exit(READ_FILE_ERROR);
     if(fscanf(fp, "%d %d", i1, j1) != 2) exit(READ_FILE_ERROR);
     if(fscanf(fp, "%s", mode_aux) != 1) exit(READ_FILE_ERROR);
     (*game_mode) = atoi(&mode_aux[1]);
     if((*game_mode) == A6)
         if(fscanf(fp, "%d %d", i2, j2) != 2) exit(READ_FILE_ERROR);
     if(fscanf(fp, "%d", wall_number) != 1) exit(READ_FILE_ERROR);
+    (*i1)--;
+    (*j1)--;
+    (*i2)--;
+    (*j2)--;
     return;
 }
 
