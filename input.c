@@ -16,6 +16,16 @@ void program_caller_checker(int argc, char** argv)
         exit(0);
 }
 
+void jump_map(FILE *fp, int wall_number)
+{
+    unsigned int i;
+    int p, q, r;
+    for(i = 0; i < wall_number; i++){
+        if(fscanf(fp, "%d %d %d", &p, &q, &r) != 3) exit(0); 
+    }
+    return;
+}
+
 char *get_filename(int argc, char **argv)
 {
     if(argc == 2) return argv[1];

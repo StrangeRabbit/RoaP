@@ -18,6 +18,7 @@ int main(int argc, char** argv)
     FILE *fp;
     FILE *ofp;
     char *filename; 
+    int flag;
     char output_filename[MAX];
     cell *matrix;
     program_caller_checker(argc, argv);
@@ -26,10 +27,21 @@ int main(int argc, char** argv)
     create_filename(argc, argv, output_filename);
     ofp = create_file(output_filename);
     while (fscanf(fp, "%d %d", &row, &column) == 2){
-        get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
-        matrix = build_board(fp, row, column, wall_number);
-        //print_matrix(matrix, row, column);
+        flag = 0;
+        //get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
         //printf("row: %d\ncolumn: %d\ngame mode: %d\ni1: %d\nj1: %d\ni2: %d\nj2: %d\nwall number: %d\n\n\n", row, column, game_mode, i1, j1, i2, j2, wall_number);
+
+        if(is_cell_in_board(row, column, i1, j1) == FALSE) flag = -2;
+        if(game_mode == A6)
+            if(is_cell_in_board(row, column, i2, j2) == FALSE) flag = -2;
+        if(flag == -2){
+            jump_map(fp, wall_number);
+            fprintf(ofp, "%d\n\n", flag);
+            continue;
+        }
+        
+        matrix = build_board(fp, row, column, wall_number);
+        print_matrix(matrix, row, column);
         switch (game_mode)
         {
         case A1:

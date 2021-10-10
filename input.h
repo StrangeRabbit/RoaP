@@ -4,6 +4,7 @@
 #define __INPUT__
 
 void program_caller_checker(int argc, char** argv);
+void jump_map(FILE *fp, int wall_number);
 char *get_filename(int argc, char **argv);
 FILE *open_file(char *filename);
 BOOL file_checker(char *filename);
