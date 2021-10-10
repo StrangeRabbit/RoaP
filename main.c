@@ -53,8 +53,8 @@ int main(int argc, char** argv)
             exit(INVALID_GAME_MODE);
             break;
         }
+        free(matrix);
     }
-    free(matrix);
     fclose(ofp);
     fclose(fp);
     return 0;
