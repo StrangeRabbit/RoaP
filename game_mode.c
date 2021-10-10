@@ -16,7 +16,7 @@ void mode_A1(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     int cell_type = -2;
     if(is_cell_in_board(row, column, i, j) == FALSE){
-        fprintf(fp, "%d", cell_type);
+        fprintf(fp, "%d\n\n", cell_type);
     }
     else{
         fprintf(fp, "%d\n\n", matrix[get_index(column, i, j)].wall);
@@ -34,7 +34,7 @@ void mode_A2(FILE *fp, cell *matrix, int i, int j, int row, int column)
     else{
         for(p = 0; p < 4; p++){
             if(is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE) continue;
-            if(is_white(matrix[get_index(column, i + around_y[p], j + around_y[p])]) == TRUE) flag = 1;
+            if(is_white(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE) flag = 1;
         }
     }
     fprintf(fp, "%d\n\n", flag);
