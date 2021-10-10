@@ -7,7 +7,7 @@
 FILE *create_file(char *filename)
 {
     FILE *fp = fopen(filename, "w");
-    if(fp == NULL) exit(CREATE_FILE_ERROR);
+    if(fp == NULL) exit(0);
     return fp;
 }
 

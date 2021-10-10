@@ -8,16 +8,16 @@ char *get_filename(int argc, char **argv)
 {
     if(argc == 2) return argv[1];
     else if(argc == 3) return argv[2];
-    else exit(FILE_NAME_ERROR);
+    else exit(0);
 }
 
 FILE *open_file(char *filename)
 {
     if(file_checker(filename) == FALSE)
-        exit(FILE_NAME_ERROR);
+        exit(0);
     FILE *fp = fopen(filename, "r");
     if(fp == NULL)
-        exit(FILE_NAME_ERROR);
+        exit(0);
     return fp;
 }
 
@@ -35,12 +35,12 @@ void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, i
 {
     char mode_aux[3];
 
-    if(fscanf(fp, "%d %d", i1, j1) != 2) exit(READ_FILE_ERROR);
-    if(fscanf(fp, "%s", mode_aux) != 1) exit(READ_FILE_ERROR);
+    if(fscanf(fp, "%d %d", i1, j1) != 2) exit(0);
+    if(fscanf(fp, "%s", mode_aux) != 1) exit(0);
     (*game_mode) = atoi(&mode_aux[1]);
     if((*game_mode) == A6)
-        if(fscanf(fp, "%d %d", i2, j2) != 2) exit(READ_FILE_ERROR);
-    if(fscanf(fp, "%d", wall_number) != 1) exit(READ_FILE_ERROR);
+        if(fscanf(fp, "%d %d", i2, j2) != 2) exit(0);
+    if(fscanf(fp, "%d", wall_number) != 1) exit(0);
     (*i1)--;
     (*j1)--;
     (*i2)--;

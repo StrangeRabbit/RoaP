@@ -50,14 +50,14 @@ int main(int argc, char** argv)
             mode_A6(ofp, matrix, i1, j1, i2, j2, row, column);
             break;
         default:
-            exit(INVALID_GAME_MODE);
+            exit(0);
             break;
         }
         free(matrix);
     }
     fclose(ofp);
     fclose(fp);
-    return 0;
+    exit(0);
 }
 
 void print_matrix(cell *matrix, int row, int column)
