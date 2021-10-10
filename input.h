@@ -3,6 +3,7 @@
 #ifndef __INPUT__
 #define __INPUT__
 
+void program_caller_checker(int argc, char** argv);
 char *get_filename(int argc, char **argv);
 FILE *open_file(char *filename);
 BOOL file_checker(char *filename);

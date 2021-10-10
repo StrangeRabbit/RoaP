@@ -20,6 +20,7 @@ int main(int argc, char** argv)
     char *filename; 
     char output_filename[MAX];
     cell *matrix;
+    program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
     fp = open_file(filename);
     create_filename(argc, argv, output_filename);

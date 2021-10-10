@@ -4,6 +4,18 @@
 
 #include "input.h"
 
+void program_caller_checker(int argc, char** argv)
+{
+    if(argc != 3)
+        exit(0);
+    if(strlen(argv[1]) != 2)
+        exit(0);
+    if(argv[1][0] != '-')
+        exit(0);
+    if(argv[1][1] != 's')
+        exit(0);
+}
+
 char *get_filename(int argc, char **argv)
 {
     if(argc == 2) return argv[1];
