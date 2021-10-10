@@ -67,7 +67,7 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 
     cell *matrix = init_matrix(row, column);
     for(p = 0; p < wall_number; p++){
-        fscanf(fp, "%d %d %d", &i, &j, &wall);
+        if(fscanf(fp, "%d %d %d", &i, &j, &wall) != 3) exit(0);
         matrix[get_index(column, i - 1, j - 1)].wall = wall;
     }
     return matrix;
