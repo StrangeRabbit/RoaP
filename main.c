@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     ofp = create_file(output_filename);
     while (fscanf(fp, "%d %d", &row, &column) == 2){
         flag = 0;
-        //get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
+        get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
         //printf("row: %d\ncolumn: %d\ngame mode: %d\ni1: %d\nj1: %d\ni2: %d\nj2: %d\nwall number: %d\n\n\n", row, column, game_mode, i1, j1, i2, j2, wall_number);
 
         if(is_cell_in_board(row, column, i1, j1) == FALSE) flag = -2;
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
         }
         
         matrix = build_board(fp, row, column, wall_number);
-        print_matrix(matrix, row, column);
+        //print_matrix(matrix, row, column);
         switch (game_mode)
         {
         case A1:
