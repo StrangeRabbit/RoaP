@@ -1,7 +1,7 @@
 PROJECT_NAME = roap #target file name
 
 CC = gcc #compiler
-CFLAGS = -Wall -std=c99 -O3
+CFLAGS = -Wall -std=c99 -g #-O3
 
 OBJECTS = main.o input.o output.o game_mode.o #objects
 

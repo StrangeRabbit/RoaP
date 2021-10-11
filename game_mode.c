@@ -131,62 +131,66 @@ void CWQU(cell *matrix, int row, int column)
         for(j = 0; j < column; j++){
             cell_index = get_index(column, i, j);
             if(is_white(matrix[cell_index]) == FALSE) continue;
-            if(is_cell_in_board(row, column, i, j + 1) == TRUE && is_white(matrix[get_index(column, i, j + 1)]) == TRUE){
-                front_cell_index = get_index(column, i, j + 1);
-                
-                // do search first
-                for(p = cell_index; p != matrix[p].group; p = matrix[p].group);
-                for(q = front_cell_index; q != matrix[q].group; q = matrix[q].group);
+            if(is_cell_in_board(row, column, i, j + 1) == TRUE){
+                if(is_white(matrix[get_index(column, i, j + 1)]) == TRUE){
+                    front_cell_index = get_index(column, i, j + 1);
+                    
+                    // do search first
+                    for(p = cell_index; p != matrix[p].group; p = matrix[p].group);
+                    for(q = front_cell_index; q != matrix[q].group; q = matrix[q].group);
 
-                if(p == q) continue;
+                    if(p == q) continue;
 
-                if(matrix[p].sz < matrix[q].sz){
-                    matrix[p].group = q;
-                    matrix[q].sz += matrix[p].sz;
-                    t = q;
-                }
-                else{
-                    matrix[q].group = p;
-                    matrix[p].sz += matrix[q].sz;
-                    t = p;
-                }
+                    if(matrix[p].sz < matrix[q].sz){
+                        matrix[p].group = q;
+                        matrix[q].sz += matrix[p].sz;
+                        t = q;
+                    }
+                    else{
+                        matrix[q].group = p;
+                        matrix[p].sz += matrix[q].sz;
+                        t = p;
+                    }
 
-                for (p = cell_index; p != matrix[p].group; p = x) {
-                    x = matrix[p].group;
-                    matrix[p].group = t;
-                }
-                for (q = front_cell_index; q != matrix[q].group; q = x) {
-                    x = matrix[q].group;
-                    matrix[q].group = t;
+                    for (p = cell_index; p != matrix[p].group; p = x) {
+                        x = matrix[p].group;
+                        matrix[p].group = t;
+                    }
+                    for (q = front_cell_index; q != matrix[q].group; q = x) {
+                        x = matrix[q].group;
+                        matrix[q].group = t;
+                    }
                 }
             }
-            if(is_cell_in_board(row, column, i + 1, j) == TRUE && is_white(matrix[get_index(column, i + 1, j)]) == TRUE){
-                under_cell_index = get_index(column, i + 1, j);
-                
-                // do search first
-                for(p = cell_index; p != matrix[p].group; p = matrix[p].group);
-                for(q = under_cell_index; q != matrix[q].group; q = matrix[q].group);
+            if(is_cell_in_board(row, column, i + 1, j) == TRUE){
+                if (is_white(matrix[get_index(column, i + 1, j)]) == TRUE){
+                    under_cell_index = get_index(column, i + 1, j);
+                    
+                    // do search first
+                    for(p = cell_index; p != matrix[p].group; p = matrix[p].group);
+                    for(q = under_cell_index; q != matrix[q].group; q = matrix[q].group);
 
-                if(p == q) continue;
+                    if(p == q) continue;
 
-                if(matrix[p].sz < matrix[q].sz){
-                    matrix[p].group = q;
-                    matrix[q].sz += matrix[p].sz;
-                    t = q;
-                }
-                else{
-                    matrix[q].group = p;
-                    matrix[p].sz += matrix[q].sz;
-                    t = p;
-                }
+                    if(matrix[p].sz < matrix[q].sz){
+                        matrix[p].group = q;
+                        matrix[q].sz += matrix[p].sz;
+                        t = q;
+                    }
+                    else{
+                        matrix[q].group = p;
+                        matrix[p].sz += matrix[q].sz;
+                        t = p;
+                    }
 
-                for (p = cell_index; p != matrix[p].group; p = x) {
-                    x = matrix[p].group;
-                    matrix[p].group = t;
-                }
-                for (q = under_cell_index; q != matrix[q].group; q = x) {
-                    x = matrix[q].group;
-                    matrix[q].group = t;
+                    for (p = cell_index; p != matrix[p].group; p = x) {
+                        x = matrix[p].group;
+                        matrix[p].group = t;
+                    }
+                    for (q = under_cell_index; q != matrix[q].group; q = x) {
+                        x = matrix[q].group;
+                        matrix[q].group = t;
+                    }
                 }
             }
         }

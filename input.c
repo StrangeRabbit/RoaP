@@ -87,7 +87,7 @@ cell *init_matrix(int row, int column)
 {
     unsigned int i;
     
-    cell *matrix = (cell*) malloc(row * column * sizeof(cell)); 
+    cell *matrix = (cell*) calloc(row * column, sizeof(cell)); 
 
     for (i = 0; i < row * column; i++)
     {
