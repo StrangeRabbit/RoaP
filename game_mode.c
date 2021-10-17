@@ -58,12 +58,15 @@ void mode_A2(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     unsigned int p;
     int flag = 0;
+    // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
     if (is_cell_in_board(row, column, i, j) == FALSE)
         flag = -2;
     else
     {
+        // check 4 positions around the cell
+        // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
             if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
@@ -90,12 +93,15 @@ void mode_A3(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     unsigned int p;
     int flag = 0;
+    // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
     if (is_cell_in_board(row, column, i, j) == FALSE)
         flag = -2;
     else
     {
+        // check 4 positions around the cell
+        // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
             if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
@@ -122,12 +128,15 @@ void mode_A4(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     unsigned int p;
     int flag = 0;
+    // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
     if (is_cell_in_board(row, column, i, j) == FALSE)
         flag = -2;
     else
     {
+        // check 4 positions around the cell
+        // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
             if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
@@ -159,9 +168,12 @@ void mode_A5(FILE *fp, cell *matrix, int i, int j, int row, int column)
         flag = -1;
     else
     {
+        // just need 1 of the sentences true
+        // if left and right cells are white the wall can be broken
         if (is_cell_in_board(row, column, i, j - 1) == TRUE && is_cell_in_board(row, column, i, j + 1) == TRUE)
             if (is_white(matrix[get_index(column, i, j + 1)]) == TRUE && is_white(matrix[get_index(column, i, j - 1)]) == TRUE)
                 flag = 1;
+        // if up and down cells are white the wall can be broken
         if (is_cell_in_board(row, column, i + 1, j) == TRUE && is_cell_in_board(row, column, i - 1, j) == TRUE)
             if (is_white(matrix[get_index(column, i + 1, j)]) == TRUE && is_white(matrix[get_index(column, i - 1, j)]) == TRUE)
                 flag = 1;
@@ -191,7 +203,9 @@ void mode_A6(FILE *fp, cell *matrix, int i1, int j1, int i2, int j2, int row, in
     }
     else
     {
+        //connect all rooms with a compressed weighted quick union
         CWQU(matrix, row, column);
+
         flag = same_root(matrix, row, column, i1, j1, i2, j2);
     }
     fprintf(fp, "%d\n\n", flag);
@@ -216,10 +230,8 @@ int same_root(cell *matrix, int row, int column, int i1, int j1, int i2, int j2)
     int p, q;
 
     // Gets two roots of the tree
-    for (p = cell1; p != matrix[p].group; p = matrix[p].group)
-        ;
-    for (q = cell2; q != matrix[q].group; q = matrix[q].group)
-        ;
+    for (p = cell1; p != matrix[p].group; p = matrix[p].group);
+    for (q = cell2; q != matrix[q].group; q = matrix[q].group);
 
     // Checks the roots
     if (p == q)
@@ -262,14 +274,11 @@ void CWQU(cell *matrix, int row, int column)
                     front_cell_index = get_index(column, i, j + 1);
 
                     //  Gets the 2 roots of the trees
-                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group)
-                        ;
-                    for (q = front_cell_index; q != matrix[q].group; q = matrix[q].group)
-                        ;
+                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group);
+                    for (q = front_cell_index; q != matrix[q].group; q = matrix[q].group);
 
                     // Compares 2 roots
-                    if (p == q)
-                        continue;
+                    if (p == q) continue;
 
                     // Connects the 2 diferent trees taking in notice the size of each tree
                     if (matrix[p].sz < matrix[q].sz)
@@ -306,14 +315,11 @@ void CWQU(cell *matrix, int row, int column)
                     under_cell_index = get_index(column, i + 1, j);
 
                     //  Gets the 2 roots of the trees
-                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group)
-                        ;
-                    for (q = under_cell_index; q != matrix[q].group; q = matrix[q].group)
-                        ;
+                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group);
+                    for (q = under_cell_index; q != matrix[q].group; q = matrix[q].group);
 
                     // Compares 2 roots
-                    if (p == q)
-                        continue;
+                    if (p == q) continue;
 
                     // Connects the 2 diferent trees taking in notice the size of each tree
                     if (matrix[p].sz < matrix[q].sz)

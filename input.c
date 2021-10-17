@@ -5,7 +5,7 @@
 #include "input.h"
 
 /**
- * @brief Confirms is konsole input has all it need 
+ * @brief Confirms if konsole input has all it need 
  * @param argc argument count
  * @param argv argument vector
  * @return VOID
@@ -23,7 +23,7 @@ void program_caller_checker(int argc, char **argv)
 }
 
 /**
- * @brief If need be jumps a map
+ * @brief If need it jumps a map
  * @param fp pointer to file containing information
  * @param wall_number number of wall a predefined map has
  * @return VOID
@@ -44,7 +44,7 @@ void jump_map(FILE *fp, int wall_number)
  * @brief Gets file name from argv 
  * @param argc argument count
  * @param argv argument vector
- * @return String with the file name
+ * @return Pointer to string with the file name
  */
 char *get_filename(int argc, char **argv)
 {
@@ -94,7 +94,7 @@ BOOL file_checker(char *filename)
  * @param j1 Pointer to a int variable that will cointain column of the first importante cell
  * @param i2 Pointer to a int variable that will cointain line of the second importante cell
  * @param j2 Pointer to a int variable that will cointain column of the seconf importante cell
- * @param wall_number Pointer to a int variable that will cointain the numver of wall a map has
+ * @param wall_number Pointer to a int variable that will cointain the number of wall a map has
  * @return VOID
  */
 void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, int *wall_number)
@@ -111,6 +111,7 @@ void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, i
             exit(0);
     if (fscanf(fp, "%d", wall_number) != 1)
         exit(0);
+    // adapt coordinates to our matrix
     (*i1)--;
     (*j1)--;
     (*i2)--;
@@ -119,7 +120,7 @@ void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, i
 }
 
 /**
- * @brief Reades wall from a file and stores their value in the map
+ * @brief Allocates a map, read wall from a file and stores their value in the map
  * @param fp Pointer to a file that has the information
  * @param row number of rows in the map 
  * @param column number of columns in the map
@@ -142,7 +143,7 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 }
 
 /**
- * @brief inicializes all cells in board to have the expected values  
+ * @brief allocate and inicializes all cells in board to have the expected values  
  * @param row number of rows in the map
  * @param column number of columns in the a map
  * @return array of cells with all the values iniciatialized
