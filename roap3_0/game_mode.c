@@ -10,14 +10,14 @@
  * @param column numer of columns in the map 
  * @param i row that the cell is in
  * @param j column that the cell is in
- * @return TRUE if cell is in the map, otherwise FALSE
+ * @return true if cell is in the map, otherwise false
  */
-BOOL is_cell_in_board(int row, int column, int i, int j)
+bool is_cell_in_board(int row, int column, int i, int j)
 {
     if (i > row - 1 || i < 0 || j > column - 1 || j < 0)
-        return FALSE;
+        return false;
     else
-        return TRUE;
+        return true;
 }
 
 /**
@@ -33,7 +33,7 @@ BOOL is_cell_in_board(int row, int column, int i, int j)
 void mode_A1(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     int cell_type = -2;
-    if (is_cell_in_board(row, column, i, j) == FALSE)
+    if (is_cell_in_board(row, column, i, j) == false)
     {
         fprintf(fp, "%d\n\n", cell_type);
     }
@@ -61,7 +61,7 @@ void mode_A2(FILE *fp, cell *matrix, int i, int j, int row, int column)
     // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
-    if (is_cell_in_board(row, column, i, j) == FALSE)
+    if (is_cell_in_board(row, column, i, j) == false)
         flag = -2;
     else
     {
@@ -69,9 +69,9 @@ void mode_A2(FILE *fp, cell *matrix, int i, int j, int row, int column)
         // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
-            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
+            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == false)
                 continue;
-            if (is_white(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE)
+            if (is_white(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == true)
                 flag = 1;
         }
     }
@@ -96,7 +96,7 @@ void mode_A3(FILE *fp, cell *matrix, int i, int j, int row, int column)
     // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
-    if (is_cell_in_board(row, column, i, j) == FALSE)
+    if (is_cell_in_board(row, column, i, j) == false)
         flag = -2;
     else
     {
@@ -104,9 +104,9 @@ void mode_A3(FILE *fp, cell *matrix, int i, int j, int row, int column)
         // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
-            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
+            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == false)
                 continue;
-            if (is_grey(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE)
+            if (is_grey(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == true)
                 flag = 1;
         }
     }
@@ -131,7 +131,7 @@ void mode_A4(FILE *fp, cell *matrix, int i, int j, int row, int column)
     // way of compress code
     int around_x[] = {-1, 0, 1, 0};
     int around_y[] = {0, 1, 0, -1};
-    if (is_cell_in_board(row, column, i, j) == FALSE)
+    if (is_cell_in_board(row, column, i, j) == false)
         flag = -2;
     else
     {
@@ -139,9 +139,9 @@ void mode_A4(FILE *fp, cell *matrix, int i, int j, int row, int column)
         // only need 1 of them to match the sentence
         for (p = 0; p < 4; p++)
         {
-            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == FALSE)
+            if (is_cell_in_board(row, column, i + around_y[p], j + around_x[p]) == false)
                 continue;
-            if (is_black(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == TRUE)
+            if (is_black(matrix[get_index(column, i + around_y[p], j + around_x[p])]) == true)
                 flag = 1;
         }
     }
@@ -162,20 +162,20 @@ void mode_A4(FILE *fp, cell *matrix, int i, int j, int row, int column)
 void mode_A5(FILE *fp, cell *matrix, int i, int j, int row, int column)
 {
     int flag = 0;
-    if (is_cell_in_board(row, column, i, j) == FALSE)
+    if (is_cell_in_board(row, column, i, j) == false)
         flag = -2;
-    else if (is_grey(matrix[get_index(column, i, j)]) == FALSE)
+    else if (is_grey(matrix[get_index(column, i, j)]) == false)
         flag = -1;
     else
     {
         // just need 1 of the sentences true
         // if left and right cells are white the wall can be broken
-        if (is_cell_in_board(row, column, i, j - 1) == TRUE && is_cell_in_board(row, column, i, j + 1) == TRUE)
-            if (is_white(matrix[get_index(column, i, j + 1)]) == TRUE && is_white(matrix[get_index(column, i, j - 1)]) == TRUE)
+        if (is_cell_in_board(row, column, i, j - 1) == true && is_cell_in_board(row, column, i, j + 1) == true)
+            if (is_white(matrix[get_index(column, i, j + 1)]) == true && is_white(matrix[get_index(column, i, j - 1)]) == true)
                 flag = 1;
         // if up and down cells are white the wall can be broken
-        if (is_cell_in_board(row, column, i + 1, j) == TRUE && is_cell_in_board(row, column, i - 1, j) == TRUE)
-            if (is_white(matrix[get_index(column, i + 1, j)]) == TRUE && is_white(matrix[get_index(column, i - 1, j)]) == TRUE)
+        if (is_cell_in_board(row, column, i + 1, j) == true && is_cell_in_board(row, column, i - 1, j) == true)
+            if (is_white(matrix[get_index(column, i + 1, j)]) == true && is_white(matrix[get_index(column, i - 1, j)]) == true)
                 flag = 1;
     }
     fprintf(fp, "%d\n\n", flag);
@@ -197,7 +197,7 @@ void mode_A5(FILE *fp, cell *matrix, int i, int j, int row, int column)
 void mode_A6(FILE *fp, cell *matrix, int i1, int j1, int i2, int j2, int row, int column)
 {
     int flag;
-    if (is_cell_in_board(row, column, i1, j1) == FALSE || is_cell_in_board(row, column, i2, j2) == FALSE)
+    if (is_cell_in_board(row, column, i1, j1) == false || is_cell_in_board(row, column, i2, j2) == false)
     {
         flag = -2;
     }
@@ -230,8 +230,10 @@ int same_root(cell *matrix, int row, int column, int i1, int j1, int i2, int j2)
     int p, q;
 
     // Gets two roots of the tree
-    for (p = cell1; p != matrix[p].group; p = matrix[p].group);
-    for (q = cell2; q != matrix[q].group; q = matrix[q].group);
+    for (p = cell1; p != matrix[p].group; p = matrix[p].group)
+        ;
+    for (q = cell2; q != matrix[q].group; q = matrix[q].group)
+        ;
 
     // Checks the roots
     if (p == q)
@@ -263,22 +265,25 @@ void CWQU(cell *matrix, int row, int column)
             cell_index = get_index(column, i, j);
 
             // Only check connects the cell if it is not a wall
-            if (is_white(matrix[cell_index]) == FALSE)
+            if (is_white(matrix[cell_index]) == false)
                 continue;
             // Only connects if the cell is in the board
-            if (is_cell_in_board(row, column, i, j + 1) == TRUE)
+            if (is_cell_in_board(row, column, i, j + 1) == true)
             {
-                if (is_white(matrix[get_index(column, i, j + 1)]) == TRUE)
+                if (is_white(matrix[get_index(column, i, j + 1)]) == true)
                 {
                     // Gets the index of the cell that has index +1
                     front_cell_index = get_index(column, i, j + 1);
 
                     //  Gets the 2 roots of the trees
-                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group);
-                    for (q = front_cell_index; q != matrix[q].group; q = matrix[q].group);
+                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group)
+                        ;
+                    for (q = front_cell_index; q != matrix[q].group; q = matrix[q].group)
+                        ;
 
                     // Compares 2 roots
-                    if (p == q) continue;
+                    if (p == q)
+                        continue;
 
                     // Connects the 2 diferent trees taking in notice the size of each tree
                     if (matrix[p].sz < matrix[q].sz)
@@ -308,18 +313,21 @@ void CWQU(cell *matrix, int row, int column)
                 }
             }
             // only connecrs if cell with index + number of columns in the map && is white
-            if (is_cell_in_board(row, column, i + 1, j) == TRUE)
+            if (is_cell_in_board(row, column, i + 1, j) == true)
             {
-                if (is_white(matrix[get_index(column, i + 1, j)]) == TRUE)
+                if (is_white(matrix[get_index(column, i + 1, j)]) == true)
                 {
                     under_cell_index = get_index(column, i + 1, j);
 
                     //  Gets the 2 roots of the trees
-                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group);
-                    for (q = under_cell_index; q != matrix[q].group; q = matrix[q].group);
+                    for (p = cell_index; p != matrix[p].group; p = matrix[p].group)
+                        ;
+                    for (q = under_cell_index; q != matrix[q].group; q = matrix[q].group)
+                        ;
 
                     // Compares 2 roots
-                    if (p == q) continue;
+                    if (p == q)
+                        continue;
 
                     // Connects the 2 diferent trees taking in notice the size of each tree
                     if (matrix[p].sz < matrix[q].sz)
@@ -355,50 +363,58 @@ void CWQU(cell *matrix, int row, int column)
 /**
  * @brief Confirms if a cell is white 
  * @param position Cell that is to be confirmed 
- * @return TRUE if position is white FALSE if position is not 
+ * @return true if position is white false if position is not 
  */
-BOOL is_white(cell position)
+bool is_white(cell position)
 {
     if (position.wall == 0)
     {
-        return TRUE;
+        return true;
     }
     else
     {
-        return FALSE;
+        return false;
     }
 }
 
 /**
  * @brief Confirms if a cell is grey 
  * @param position Cell that is to be confirmed 
- * @return TRUE if position is whigreyte FALSE if position is not 
+ * @return true if position is whigreyte false if position is not 
  */
-BOOL is_grey(cell position)
+bool is_grey(cell position)
 {
     if (position.wall > 0)
     {
-        return TRUE;
+        return true;
     }
     else
     {
-        return FALSE;
+        return false;
     }
 }
 
 /**
  * @brief Confirms if a cell is black 
  * @param position Cell that is to be confirmed 
- * @return TRUE if position is black FALSE if position is not
+ * @return true if position is black false if position is not
  */
-BOOL is_black(cell position)
+bool is_black(cell position)
 {
     if (position.wall == -1)
     {
-        return TRUE;
+        return true;
     }
     else
     {
-        return FALSE;
+        return false;
     }
+}
+
+bool is_breakable2_0()
+{
+}
+
+bool is_adjacent()
+{
 }

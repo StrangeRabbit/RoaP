@@ -39,10 +39,10 @@ int main(int argc, char **argv)
         flag = 0;
         get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
 
-        if (is_cell_in_board(row, column, i1, j1) == FALSE)
+        if (is_cell_in_board(row, column, i1, j1) == false)
             flag = -2;
         if (game_mode == A6)
-            if (is_cell_in_board(row, column, i2, j2) == FALSE)
+            if (is_cell_in_board(row, column, i2, j2) == false)
                 flag = -2;
         if (flag == -2)
         {

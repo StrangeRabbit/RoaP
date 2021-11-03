@@ -63,7 +63,7 @@ char *get_filename(int argc, char **argv)
  */
 FILE *open_file(char *filename)
 {
-    if (file_checker(filename) == FALSE)
+    if (file_checker(filename) == false)
         exit(0);
     FILE *fp = fopen(filename, "r");
     if (fp == NULL)
@@ -74,16 +74,16 @@ FILE *open_file(char *filename)
 /**
  * @brief Check if a file has the correct termination
  * @param filename Name of the file to be tested
- * @return True if file has right termination, false otherwise
+ * @return true if file has right termination, false otherwise
  */
-BOOL file_checker(char *filename)
+bool file_checker(char *filename)
 {
     int len = strlen(filename);
 
     if (strcmp(&filename[len - 4], ".in1") == 0)
-        return TRUE;
+        return true;
     else
-        return FALSE;
+        return false;
 }
 
 /**

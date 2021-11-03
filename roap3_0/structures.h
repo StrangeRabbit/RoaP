@@ -1,7 +1,8 @@
 #ifndef __TYPE_STRUCT__
 #define __TYPE_STRUCT__
 
-typedef enum {FALSE,TRUE} BOOL;
+#include "stdbool.h"
+#include "limits.h"
 
 typedef struct
 {
@@ -10,6 +11,14 @@ typedef struct
     unsigned int group;
 } cell;
 
-typedef enum {A1 = 1, A2, A3, A4, A5, A6} mode;
+typedef enum
+{
+    A1 = 1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6
+} mode;
 
 #endif
