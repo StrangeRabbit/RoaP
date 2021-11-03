@@ -210,12 +210,12 @@ void dijkstra(int **graph, int src, int L, int C)
 
 }
 
-int revert_index_i(idx, C)
+int idx_i(idx, C)
 {
     return idx / C;
 }
 
-int rever_index_j(idx, C)
+int idx_j(idx, C)
 {
     return idx % C;
 }
