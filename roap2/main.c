@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <stdbool.h>
 
 #include "defs.h"
 #include "LinkedList.h"
 
-typedef struct _vertice {unsigned int v; int light; int cost;} vertice;
+typedef struct _vertice {unsigned int v; int cost;} vertice;
 
 
 LinkedList **initArray(int L, int C)
@@ -103,7 +105,6 @@ void uniGraph(LinkedList **array, int** matrix, int L, int C)
                 aux = (vertice*) malloc(sizeof(vertice));
 
                 aux->cost = matrix[i + y[p]][j + x[p]];
-                aux->light = 0;
                 aux->v = index1;
                 
                 array[index2] = insertSortedLinkedList(array[index2], aux, compareItems, err);
@@ -111,7 +112,6 @@ void uniGraph(LinkedList **array, int** matrix, int L, int C)
                 aux = (vertice*) malloc(sizeof(vertice));
                 
                 aux->cost = matrix[i + y[p]][j + x[p]];
-                aux->light = 0;
                 aux->v = index2;
                 
                 array[index1] = insertSortedLinkedList(array[index1], aux, compareItems, err);
@@ -162,6 +162,63 @@ int** build_matrix(FILE* fp, int L, int C, int P)
     return matrix;
 }
 
+bool breakable(int **graph, int i, int j, int i_src, int j_src, int L, int C)
+{
+    int i_aux = i - i_src;
+    int j_aux = j - j_src;
+    if (in_board(L, C,i + i_aux,j + j_aux) == 0) 
+        return false;
+    
+    if(graph[i + i_aux][j + j_aux] == 0)
+        return true;
+    else
+        return false;
+}
+
+
+int minDistance(int dist[], int sptSet[], int V)
+{
+    int min = INT_MAX, min_index;
+    for(int v = 0; v < V; v++){
+        if(sptSet[v] == false && dist[v] <= min){
+            min = dist[v]; min_index = v;
+        }
+    }
+    return min_index;
+}
+
+
+
+void dijkstra(int **graph, int src, int L, int C)
+{
+    int V = L * C, idx;
+    int *dist = (int*) malloc(V * sizeof(int));
+    int *org = (int*) malloc(V * sizeof(int));
+    bool *sptSet = (bool*) malloc(V * sizeof(bool));
+    for(int i = 0; i < V; i++){
+        dist[i] = INT_MAX;
+        org[i] = -1;
+        sptSet[i] = false;
+    }
+    int latest_added_i;
+    int latest_added_j;
+    dist[src] = 0;
+    org[src] = src;
+    sptSet[src] = true;
+    
+           
+
+}
+
+int revert_index_i(idx, C)
+{
+    return idx / C;
+}
+
+int rever_index_j(idx, C)
+{
+    return idx % C;
+}
 
 int main(int argc, char **argv)
 {
