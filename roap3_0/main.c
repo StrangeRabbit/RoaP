@@ -17,7 +17,8 @@
  */
 int main(int argc, char **argv)
 {
-    int row, column, i1 = 0, j1 = 0, i2 = 0, j2 = 0, wall_number;
+    int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
+    int L, C, V, i, j, P;
     mode game_mode;
     _project project = FINAL;
     FILE *fp;
@@ -26,7 +27,7 @@ int main(int argc, char **argv)
     int flag;
     char output_filename[MAX];
     cell *matrix;
-    int **graph;
+    int *graph;
     if(argc == 3){
         project = INTERMEDIO;
     }
@@ -41,47 +42,47 @@ int main(int argc, char **argv)
     ofp = create_file(output_filename);
 
     // Start to read the map
-    while (fscanf(fp, "%d %d", &row, &column) == 2)
+    while (fscanf(fp, "%d %d", &L, &C) == 2)
     {
         flag = 0;
         if(project == INTERMEDIO){
-            get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
+            get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &P);
 
-            if (is_cell_in_board(row, column, i1, j1) == false)
+            if (is_cell_in_board(L, C, i1, j1) == false)
                 flag = -2;
             if (game_mode == A6)
-                if (is_cell_in_board(row, column, i2, j2) == false)
+                if (is_cell_in_board(L, C, i2, j2) == false)
                     flag = -2;
             if (flag == -2)
             {
-                jump_map(fp, wall_number);
+                jump_map(fp, P);
                 fprintf(ofp, "%d\n\n", flag);
                 continue;
             }
 
             // Builds the board that will be played
-            matrix = build_board(fp, row, column, wall_number);
+            matrix = build_board(fp, L, C, P);
 
             // Calls the game mode
             switch (game_mode)
             {
             case A1:
-                mode_A1(ofp, matrix, i1, j1, row, column);
+                mode_A1(ofp, matrix, i1, j1, L, C);
                 break;
             case A2:
-                mode_A2(ofp, matrix, i1, j1, row, column);
+                mode_A2(ofp, matrix, i1, j1, L, C);
                 break;
             case A3:
-                mode_A3(ofp, matrix, i1, j1, row, column);
+                mode_A3(ofp, matrix, i1, j1, L, C);
                 break;
             case A4:
-                mode_A4(ofp, matrix, i1, j1, row, column);
+                mode_A4(ofp, matrix, i1, j1, L, C);
                 break;
             case A5:
-                mode_A5(ofp, matrix, i1, j1, row, column);
+                mode_A5(ofp, matrix, i1, j1, L, C);
                 break;
             case A6:
-                mode_A6(ofp, matrix, i1, j1, i2, j2, row, column);
+                mode_A6(ofp, matrix, i1, j1, i2, j2, L, C);
                 break;
             default:
                 exit(0);
@@ -91,23 +92,24 @@ int main(int argc, char **argv)
             free(matrix);
         }
         else{
-            get_header_final(fp, &i1, &i2, &wall_number);
-            if (is_cell_in_board(row, column, i1, j1) == false)
+            V = L * C;
+            get_header_final(fp, &i, &j, &P);
+            if (is_cell_in_board(L, C, i, j) == false)
                 flag = -1;
-            if(treasure_is_adjacent_to_src(i1, j1))
+            if(treasure_is_adjacent_to_src(i, j))
                 flag = -1;
 
             if (flag == -1)
             {
-                jump_map(fp, wall_number);
+                jump_map(fp, P);
                 fprintf(ofp, "%d\n\n", flag);
                 continue;
             }
 
-            graph = build_graph(fp, row, column, wall_number);
+            graph = build_graph(fp, C, V, P);
             
             fprintf(ofp, "check\n\n");
-            free_graph(graph, row);
+            free(graph);
         }
         
     }

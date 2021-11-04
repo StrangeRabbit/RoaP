@@ -163,25 +163,26 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 /**
  * @brief Allocates a graph, read wall from a file and stores their value in the graph
  * @param fp Pointer to a file that has the information
- * @param L number of rows in the map 
- * @param C number of columns in the map
+ * @param C number of columns in the map 
+ * @param V number of vertices of the graph
  * @param P number of walls in the map 
  * @return double pointer to the graph
  */
 
-int **build_graph(FILE *fp, int L, int C, int P)
+int *build_graph(FILE *fp, int C, int V, int P)
 {
     unsigned int p;
-    int i, j, v;
+    int i, j, v, idx;
 
-    int **graph = init_graph(L, C);
+    int *graph = init_graph(V);
     
 
     for (p = 0; p < P; p++)
     {
         if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3) exit(0);
         i--; j--;
-        graph[i][j] = v;
+        idx = get_index(C, i, j);
+        graph[idx] = v;
     }
 
     return graph;
@@ -189,44 +190,19 @@ int **build_graph(FILE *fp, int L, int C, int P)
 
 /**
  * @brief allocate and inicializes all positions in graph to have the expected values  
- * @param L number of rows in the map
- * @param C number of columns in the a map
+ * @param V number of vertices of the graph
  * @return matriz of int's with all the values iniciatialized
  */
 
-int **init_graph(int L, int C)
-{
-    unsigned int i, j;
-
-    int **graph = (int **) malloc(L * sizeof(sizeof(int*)));
-    if(graph == 0) exit(0);
-    for(i = 0; i < L; i++)
-    {
-        graph[i] = (int*) malloc(C * sizeof(int));
-        if(graph[i] == NULL) exit(0);
-    }
-    for(i = 0; i < L; i++)
-        for(j = 0; j < C; j++)
-            graph[i][j] = 0;
-    return graph;
-}
-
-/**
- * @brief frees the graph
- * @param graph the graph
- * @param L number of lines of the graph
- * @return void
- */
-
-void free_graph(int **graph, int L)
+int *init_graph(int V)
 {
     unsigned int i;
-    for (i = 0; i < L; i++)
-    {
-        free(graph[i]);
-    }
-    free(graph);
-    return;
+    int *graph = (int *) malloc(V * sizeof(sizeof(int)));
+    if(graph == 0) exit(0);
+    
+    for(i = 0; i < V; i++)
+        graph[i] = 0;
+    return graph;
 }
 
 /**
