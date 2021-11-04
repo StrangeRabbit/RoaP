@@ -105,6 +105,8 @@ int main(int argc, char **argv)
             }
 
             graph = build_graph(fp, row, column, wall_number);
+
+            free_graph(graph, row);
         }
         
     }

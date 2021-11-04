@@ -15,15 +15,13 @@ input.o: input.c input.h
 output.o: output.c output.h
 game_mode.o: game_mode.c game_mode.h
 
-FILES_1=$(shell ls A1/*)
-FILES_2=$(shell ls A2/*)
-FILES_3=$(shell ls A3/*)
-FILES_4=$(shell ls A4/*)
-FILES_5=$(shell ls A5/*)
-FILES_6=$(shell ls A6/*)
-Saladas=$(shell ls Saladas/*)
+FILES_1=$(shell ls ../Bilhar_Pequeno/*)
+FILES_2=$(shell ls ../Chess_Party/*)
+FILES_3=$(shell ls ../Small/*)
+FILES_4=$(shell ls ../Enunciado/*)
 
-FILES=${FILES_1} ${FILES_2} ${FILES_3} ${FILES_4} ${FILES_5} ${FILES_6} ${Saladas}
+
+FILES=${FILES_1} ${FILES_2} ${FILES_3} ${FILES_4}
 
 test:
 	for F in ${FILES}; do  ./roap -s $$F; done;
