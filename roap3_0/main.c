@@ -97,6 +97,13 @@ int main(int argc, char **argv)
             if(treasure_is_adjacent_to_src(i1, j1))
                 flag = -1;
 
+            if (flag == -1)
+            {
+                jump_map(fp, wall_number);
+                fprintf(ofp, "%d\n\n", flag);
+                continue;
+            }
+
             graph = build_graph(fp, row, column, wall_number);
         }
         
