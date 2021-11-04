@@ -13,6 +13,7 @@ void get_header_final(FILE *fp, int *i, int *j, int *wall_number);
 cell *build_board(FILE *fp, int row, int column, int wall_number);
 int **build_graph(FILE *fp, int L, int C, int P);
 int **init_graph(int L, int C);
+void free_graph(int **graph, int L);
 cell *init_matrix(int row, int column);
 int get_index(int column, int i, int j);
 

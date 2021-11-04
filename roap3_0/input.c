@@ -206,6 +206,24 @@ int **init_graph(int L, int C)
 }
 
 /**
+ * @brief frees the graph
+ * @param graph the graph
+ * @param L number of lines of the graph
+ * @return void
+ */
+
+void free_graph(int **graph, int L)
+{
+    unsigned int i;
+    for (i = 0; i < L; i++)
+    {
+        free(graph[i]);
+    }
+    free(graph);
+    return;
+}
+
+/**
  * @brief allocate and inicializes all cells in board to have the expected values  
  * @param row number of rows in the map
  * @param column number of columns in the a map
