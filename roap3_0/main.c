@@ -91,7 +91,10 @@ int main(int argc, char **argv)
         }
         else{
             get_header_final(fp, &i1, &i2, &wall_number);
-            
+            if (is_cell_in_board(row, column, i1, j1) == false)
+                flag = -1;
+            if(treasure_is_adjacent_to_src())
+                flag = -1;
         }
         
     }
