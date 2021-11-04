@@ -16,7 +16,6 @@ void CWQU(cell *matrix, int row, int column);
 bool is_white(cell position);
 bool is_grey(cell position);
 bool is_black(cell position);
-bool is_adjacent();
-bool treasure_is_adjacent_to_src(int row, int column);
+bool treasure_is_adjacent_to_src(int i1, int j1);
 
 #endif

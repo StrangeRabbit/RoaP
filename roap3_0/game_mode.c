@@ -411,10 +411,16 @@ bool is_black(cell position)
     }
 }
 
-bool is_breakable2_0()
-{
-}
+/**
+ * @brief Confirms if treasure cell is adjacent to starting point (0,0)
+ * @param i line of trease cell
+ * @param j column of treasure cell
+ * @return true if cell adjacent, falsez otherwise
+ */
 
-bool is_adjacent()
+bool treasure_is_adjacent_to_src(int i, int j)
 {
+    if ((i == 0 && j == 1) || (i == 1 && i == 0))
+        return true;
+    return false;
 }
