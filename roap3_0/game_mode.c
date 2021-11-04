@@ -420,7 +420,7 @@ bool is_black(cell position)
 
 bool treasure_is_adjacent_to_src(int i, int j)
 {
-    if ((i == 0 && j == 1) || (i == 1 && i == 0))
+    if ((i == 0 && j == 1) || (i == 1 && j == 0))
         return true;
     return false;
 }
