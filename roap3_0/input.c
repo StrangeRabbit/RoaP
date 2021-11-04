@@ -157,6 +157,55 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
 }
 
 /**
+ * @brief Allocates a graph, read wall from a file and stores their value in the graph
+ * @param fp Pointer to a file that has the information
+ * @param L number of rows in the map 
+ * @param C number of columns in the map
+ * @param P number of walls in the map 
+ * @return double pointer to the graph
+ */
+
+int **build_graph(FILE *fp, int L, int C, int P)
+{
+    unsigned int p;
+    int i, j, v;
+
+    int **graph = init_graph(L, C);
+
+    for (p = 0; p < P; p++)
+    {
+        if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3) exit(0);
+        graph[i][j] = v;
+    }
+
+    return graph;
+}
+
+/**
+ * @brief allocate and inicializes all positions in graph to have the expected values  
+ * @param L number of rows in the map
+ * @param C number of columns in the a map
+ * @return matriz of int's with all the values iniciatialized
+ */
+
+int **init_graph(int L, int C)
+{
+    unsigned int i, j;
+
+    int **graph = (int **) malloc(L * sizeof(sizeof(int*)));
+    if(graph == 0) exit(0);
+    for(i = 0; i < L; i++)
+    {
+        graph[i] = (int*) malloc(C * sizeof(int));
+        if(graph[i] == NULL) exit(0);
+    }
+    for(i = 0; i < L; i++)
+        for(j = 0; j < C; j++)
+            graph[i][j] = 0;
+    return graph;
+}
+
+/**
  * @brief allocate and inicializes all cells in board to have the expected values  
  * @param row number of rows in the map
  * @param column number of columns in the a map

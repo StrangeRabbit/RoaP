@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     int flag;
     char output_filename[MAX];
     cell *matrix;
+    int **graph;
     if(argc == 3){
         project = INTERMEDIO;
     }
@@ -95,6 +96,8 @@ int main(int argc, char **argv)
                 flag = -1;
             if(treasure_is_adjacent_to_src(i1, j1))
                 flag = -1;
+
+            graph = build_graph(fp, row, column, wall_number);
         }
         
     }
