@@ -6,6 +6,7 @@
 #include "output.h"
 #include "game_mode.h"
 #include "structures.h"
+#include "djisktra.h"
 
 #define MAX 100
 
@@ -18,7 +19,7 @@
 int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
-    int L, C, V, i, j, P;
+    int L, C, V, i, j, P, treasure;
     mode game_mode;
     _project project = FINAL;
     FILE *fp;
@@ -107,8 +108,51 @@ int main(int argc, char **argv)
             }
 
             graph = build_graph(fp, C, V, P);
+            /*
+            for (i = 0; i < V; i++)
+            {
+                if(i % C == 0) printf("\n");
+                printf("(%3d)%4d - ", i, graph[i]);
+            }
+            printf("\n\n\n\n\n\n");
+            */
+            int *dist = (int*) malloc(V * sizeof(int));
+            if(dist == NULL) exit(0);
+    
+            int *parent = (int*) malloc(V * sizeof(int));
+            if(parent == NULL) exit(0);
+
+            bool *sptSet = (bool*) malloc(V * sizeof(bool));
+            if(sptSet == NULL) exit(0);
+
+            djisktra(graph, L, C, dist, parent, sptSet);
             
-            fprintf(ofp, "check\n\n");
+            treasure = get_index(C, i, j);
+            
+            fprintf(ofp, "%d\n\n", dist[treasure]);
+            /*
+            for (i = 0; i < V; i++)
+            {
+                if(i % C == 0) printf("\n");
+                if(dist[i] == INT_MAX) printf("(%3d)  i - ", i);
+                else printf("(%3d)%3d - ", i, dist[i]);
+            }
+            printf("\n\n\n");
+            for (i = 0; i < V; i++)
+            {
+                if(i % C == 0) printf("\n");
+                printf("(%3d)%3d - ", i, parent[i]);
+            }
+            printf("\n\n\n");
+            
+            for (i = 0; i < V; i++)
+            {
+                if(i % C == 0) printf("\n");
+                printf("(%3d)%3d - ", i, sptSet[i]);
+            }
+            
+            printf("\n\n\n\n\n\n\n\n");
+            */
             free(graph);
         }
         
