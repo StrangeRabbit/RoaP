@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     // Prepares the program to start receving information
     //program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
-    fp = open_file(filename);
+    fp = open_file(filename, argc);
     if(project == INTERMEDIO)
         create_filename(argc, argv, output_filename);
     else
@@ -105,7 +105,8 @@ int main(int argc, char **argv)
             }
 
             graph = build_graph(fp, row, column, wall_number);
-
+            
+            fprintf(ofp, "check\n\n");
             free_graph(graph, row);
         }
         

@@ -61,9 +61,9 @@ char *get_filename(int argc, char **argv)
  * @param filename Name of the file it will be opened
  * @return Pointer to file
  */
-FILE *open_file(char *filename)
+FILE *open_file(char *filename, int argc)
 {
-    if (file_checker(filename) == false)
+    if (file_checker(filename, argc) == false)
         exit(0);
     FILE *fp = fopen(filename, "r");
     if (fp == NULL)
@@ -76,14 +76,18 @@ FILE *open_file(char *filename)
  * @param filename Name of the file to be tested
  * @return true if file has right termination, false otherwise
  */
-bool file_checker(char *filename)
+bool file_checker(char *filename, int argc)
 {
     int len = strlen(filename);
-
-    if (strcmp(&filename[len - 4], ".in1") == 0)
-        return true;
-    else
-        return false;
+    if(argc == 3){
+        if (strcmp(&filename[len - 4], ".in1") == 0)
+            return true;
+    }
+    else if(argc == 2){
+        if(strcmp(&filename[len - 3], ".in") == 0)
+            return true;
+    }
+    return false;
 }
 
 /**
@@ -171,10 +175,12 @@ int **build_graph(FILE *fp, int L, int C, int P)
     int i, j, v;
 
     int **graph = init_graph(L, C);
+    
 
     for (p = 0; p < P; p++)
     {
         if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3) exit(0);
+        i--; j--;
         graph[i][j] = v;
     }
 

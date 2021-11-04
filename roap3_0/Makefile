@@ -1,7 +1,7 @@
 PROJECT_NAME = roap #target file name
 
 CC = gcc #compiler
-CFLAGS = -Wall -std=c99 -O3
+CFLAGS = -Wall -std=c99 -g
 
 OBJECTS = main.o input.o output.o game_mode.o #objects
 
@@ -15,16 +15,16 @@ input.o: input.c input.h
 output.o: output.c output.h
 game_mode.o: game_mode.c game_mode.h
 
-FILES_1=$(shell ls ../Bilhar_Pequeno/*)
-FILES_2=$(shell ls ../Chess_Party/*)
-FILES_3=$(shell ls ../Small/*)
-FILES_4=$(shell ls ../Enunciado/*)
+FILES_1=$(shell ls ../Bilhar_Pequeno/*.in)
+FILES_2=$(shell ls ../Chess_Party/*.in)
+FILES_3=$(shell ls ../Small/*.in)
+FILES_4=$(shell ls ../Enunciado/*.in)
 
 
 FILES=${FILES_1} ${FILES_2} ${FILES_3} ${FILES_4}
 
 test:
-	for F in ${FILES}; do  ./roap -s $$F; done;
+	for F in ${FILES}; do  ./roap $$F; done;
 
 clean:
 	rm -f $(PROJECT_NAME) *.o
