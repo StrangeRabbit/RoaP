@@ -19,18 +19,24 @@ int main(int argc, char **argv)
 {
     int row, column, i1 = 0, j1 = 0, i2 = 0, j2 = 0, wall_number;
     mode game_mode;
+    _project project = FINAL;
     FILE *fp;
     FILE *ofp;
     char *filename;
     int flag;
     char output_filename[MAX];
     cell *matrix;
-
+    if(argc == 3){
+        project = INTERMEDIO;
+    }
     // Prepares the program to start receving information
     program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
     fp = open_file(filename);
-    create_filename(argc, argv, output_filename);
+    if(project = INTERMEDIO)
+        create_filename(argc, argv, output_filename);
+    else
+        create_filename_final(argc, argv, output_filename);
     ofp = create_file(output_filename);
 
     // Start to read the map

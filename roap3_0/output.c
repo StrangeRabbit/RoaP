@@ -35,3 +35,14 @@ void create_filename(int argc, char **argv, char *output_filename)
     output_filename[len + 1] = '\0';
     return;
 }
+
+void create_filename_final(int argc, char **argv, char *output_filename)
+{
+    strcpy(output_filename, get_filename(argc, argv));
+    int len = strlen(output_filename);
+    output_filename[len - 2] = 's';
+    output_filename[len - 1] = 'o';
+    output_filename[len] = 'l';
+    output_filename[len + 1] = '\0';
+    return;
+}

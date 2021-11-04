@@ -13,12 +13,20 @@ typedef struct
 
 typedef enum
 {
+    FINAL,
+    INTERMEDIO,
+} _project;
+
+typedef enum
+{
     A1 = 1,
     A2,
     A3,
     A4,
     A5,
-    A6
+    A6,
 } mode;
+
+typedef void* Item ;
 
 #endif
