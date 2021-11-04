@@ -30,10 +30,10 @@ int main(int argc, char **argv)
         project = INTERMEDIO;
     }
     // Prepares the program to start receving information
-    program_caller_checker(argc, argv);
+    //program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
     fp = open_file(filename);
-    if(project = INTERMEDIO)
+    if(project == INTERMEDIO)
         create_filename(argc, argv, output_filename);
     else
         create_filename_final(argc, argv, output_filename);
@@ -43,7 +43,10 @@ int main(int argc, char **argv)
     while (fscanf(fp, "%d %d", &row, &column) == 2)
     {
         flag = 0;
-        get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
+        if(project == INTERMEDIO)
+            get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &wall_number);
+        else
+            get_header_final(fp, &i1, &i2, &wall_number);
 
         if (is_cell_in_board(row, column, i1, j1) == false)
             flag = -2;

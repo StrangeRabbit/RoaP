@@ -119,6 +119,20 @@ void get_header(FILE *fp, mode *game_mode, int *i1, int *j1, int *i2, int *j2, i
     return;
 }
 
+void get_header_final(FILE *fp, int *i, int *j, int *wall_number)
+{
+
+    if (fscanf(fp, "%d %d", i, j) != 2)
+        exit(0);
+    
+    if (fscanf(fp, "%d", wall_number) != 1)
+        exit(0);
+    // adapt coordinates to our matrix
+    (*i)--;
+    (*j)--;
+    return;
+}
+
 /**
  * @brief Allocates a map, read wall from a file and stores their value in the map
  * @param fp Pointer to a file that has the information
