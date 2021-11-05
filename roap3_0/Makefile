@@ -45,6 +45,8 @@ Small:
 Enunciado:
 	for F in ${FILES_4}; do  ./roap $$F; done;
 
+restore:
+	git restore ${FILES_C}
+
 clean:
 	rm -f $(PROJECT_NAME) *.o
-	git restore ${FILES_C}

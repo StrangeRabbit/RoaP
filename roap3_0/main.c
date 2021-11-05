@@ -32,6 +32,8 @@ int main(int argc, char **argv)
     if(argc == 3){
         project = INTERMEDIO;
     }
+
+
     // Prepares the program to start receving information
     //program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
@@ -41,6 +43,7 @@ int main(int argc, char **argv)
     else
         create_filename_final(argc, argv, output_filename);
     ofp = create_file(output_filename);
+    //printf("starting: %s   \n", filename);
 
     // Start to read the map
     while (fscanf(fp, "%d %d", &L, &C) == 2)
@@ -125,9 +128,11 @@ int main(int argc, char **argv)
             bool *sptSet = (bool*) malloc(V * sizeof(bool));
             if(sptSet == NULL) exit(0);
 
-            djisktra(graph, L, C, dist, parent, sptSet);
-            
             treasure = get_index(C, i, j);
+
+            djisktra(graph, L, C, dist, parent, sptSet, treasure);
+            //printf("out...\n\n\n\n");
+            
             
             fprintf(ofp, "%d\n\n", dist[treasure]);
             /*
@@ -157,6 +162,8 @@ int main(int argc, char **argv)
         }
         
     }
+    //printf("done\n\n\n\n");
+    
     // Closes all the files
     fclose(ofp);
     fclose(fp);
