@@ -21,8 +21,14 @@ FILES_2=$(shell ls ../Chess_Party/*.in)
 FILES_3=$(shell ls ../Small/*.in)
 FILES_4=$(shell ls ../Enunciado/*.in)
 
+FILES_C1=$(shell ls ../Bilhar_Pequeno/*.sol)
+FILES_C2=$(shell ls ../Chess_Party/*.sol)
+FILES_C3=$(shell ls ../Small/*.sol)
+FILES_C4=$(shell ls ../Enunciado/*.sol)
 
 FILES=${FILES_1} ${FILES_2} ${FILES_3} ${FILES_4}
+
+FILES_C=${FILES_C1} ${FILES_C2} ${FILES_C3} ${FILES_C4}
 
 test:
 	for F in ${FILES}; do  ./roap $$F; done;
@@ -41,3 +47,4 @@ Enunciado:
 
 clean:
 	rm -f $(PROJECT_NAME) *.o
+	git restore ${FILES_C}
