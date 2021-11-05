@@ -10,6 +10,30 @@
 
 #define MAX 100
 
+void print_walls(int V, int C, int *dist, int *parent, int *graph, int walls, FILE *fp)
+{
+    int aux = parent[V] - V;
+    int v = V + aux / 2;
+    int caller = aux != 1 && aux != -1 && aux != C && aux != -C;
+    if(parent[V] != 0) {
+        if (caller){
+            print_walls(parent[V], C, dist, parent, graph, ++walls, fp);
+        }
+        else{
+            print_walls(parent[V], C, dist, parent, graph, walls, fp);
+        }
+        
+    }
+    if(parent[V] == 0)
+        fprintf(fp, "%d\n", walls);
+    if(caller){
+        fprintf(fp, "%d %d %d\n", i_idx(v, C) + 1, j_idx(v, C) + 1, graph[v]);
+        //fprintf(fp, "%d %d %d -- %d\n", V, v, parent[V], aux);
+        
+    }
+    return;
+}
+
 /** 
  * @brief Main function of the program  
  * @param argc arguments count 
@@ -112,10 +136,10 @@ int main(int argc, char **argv)
 
             graph = build_graph(fp, C, V, P);
             /*
-            for (i = 0; i < V; i++)
+            for (i1 = 0; i1 < V; i1++)
             {
-                if(i % C == 0) printf("\n");
-                printf("(%3d)%4d - ", i, graph[i]);
+                if(i1 % C == 0) printf("\n");
+                printf("(%3d)%3d   ", i1, graph[i1]);
             }
             printf("\n\n\n\n\n\n");
             */
@@ -133,8 +157,22 @@ int main(int argc, char **argv)
             djisktra(graph, L, C, dist, parent, sptSet, treasure);
             //printf("out...\n\n\n\n");
             
+            switch (dist[treasure])
+            {
+            case INT_MAX:
+                fprintf(ofp, "-1\n\n");
+                break;
             
-            fprintf(ofp, "%d\n\n", dist[treasure]);
+            case 0:
+                fprintf(ofp, "%d\n\n", dist[treasure]);
+                break;
+
+            default:
+                fprintf(ofp, "%d\n", dist[treasure]);
+                print_walls(treasure, C, dist, parent, graph, 0, ofp);
+                fprintf(ofp, "\n");
+                break;
+            }
             /*
             for (i = 0; i < V; i++)
             {
