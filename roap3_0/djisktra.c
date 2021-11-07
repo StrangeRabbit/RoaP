@@ -63,10 +63,10 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     int V = L * C;
     unsigned int i, j, v;
     int u;
-    int *heap = (int*) malloc(V * sizeof(int));
+    int *heap;
     int hsize, lfree;
     int connected, pos, idx;
-    hinit(V, heap, &hsize, &lfree);
+    hinit(V, &heap, &hsize, &lfree);
 
     for(v = 0; v < V; v++){
         dist[v] = INT_MAX;
@@ -176,7 +176,6 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
                 FixUp(heap, pos, dist);
             }
         }
-        free(heap);
         /*
         for(int w = 0; w < lfreee; w++)
         {
@@ -190,5 +189,6 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         printf("%d\n", dist[rand]);
         */
     }
+    free(heap);
     return;
 }

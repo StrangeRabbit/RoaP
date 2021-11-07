@@ -6,9 +6,9 @@
 #define highPri(a, b) (dist[a] < dist[b])
 #define exch(a, b) int t = a; a = b;  b = t
 
-void hinit(unsigned size, int queue[], int *hsize, int *free)
+void hinit(unsigned size, int *heap[], int *hsize, int *free)
 {
-    queue = (int*) malloc(size * sizeof(int));
+    (*heap) = (int*) malloc(sizeof(int) * size);
     (*hsize) = size;
     (*free) = 0;
 }

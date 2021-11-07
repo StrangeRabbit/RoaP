@@ -1,7 +1,7 @@
 #ifndef _HEAP_H_
 #define _HEAP_H_
 
-void hinit(unsigned size, int queue[], int *hsize, int *free);
+void hinit(unsigned size, int *queue[], int *hsize, int *free);
 void push(int v, int dist[], int queue[], int hsize, int *free);
 void FixUp(int heap[], int idx, int dist[]);
 void FixDown(int free, int heap[], int idx, int dist[]);
