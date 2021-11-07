@@ -24,6 +24,7 @@ void print_walls(int V, int C, int *dist, int *parent, int *graph, int walls, FI
         }
         
     }
+    if(parent[V] == 0 && V != 1 && V != C) walls++;
     if(parent[V] == 0)
         fprintf(fp, "%d\n", walls);
     if(caller){
