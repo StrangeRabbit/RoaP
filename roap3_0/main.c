@@ -13,34 +13,9 @@
 
 void print_walls(int P, int src, int *walls, int *graph, FILE *fp, int C)
 {
-<<<<<<< HEAD
-    int aux = parent[V] - V;
-    int v = V + aux / 2;
-    int caller = aux != 1 && aux != -1 && aux != C && aux != -C;
-    if (parent[V] != 0)
-    {
-        if (caller)
-        {
-            print_walls(parent[V], C, dist, parent, graph, ++walls, fp);
-        }
-        else
-        {
-            print_walls(parent[V], C, dist, parent, graph, walls, fp);
-        }
-    }
-    if (parent[V] == 0 && V != 1 && V != C)
-        walls++;
-    if (parent[V] == 0)
-        fprintf(fp, "%d\n", walls);
-    if (caller)
-    {
-        fprintf(fp, "%d %d %d\n", i_idx(v, C) + 1, j_idx(v, C) + 1, graph[v]);
-        //fprintf(fp, "%d %d %d -- %d\n", V, v, parent[V], aux);
-=======
     int i;
     for(i = P - 1; i >= 0; i--){
         fprintf(fp, "%d %d %d\n", i_idx(walls[i], C) + 1, j_idx(walls[i], C) + 1, graph[walls[i]]);
->>>>>>> fe12e68 (no recursives anymore)
     }
     return;
 }
