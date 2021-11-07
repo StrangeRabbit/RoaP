@@ -8,7 +8,7 @@
 #include "game_mode.h"
 #include "heap.h"
 
-int connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2, int C)
+int connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2, int C, int L)
 {
     int aux = v2 + v2 - v1;
     int flag = 0;
@@ -22,12 +22,14 @@ int connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2,
             dist[v2] = dist[v1];
         }
     }
-    if((graph[v2] > 0) && (graph[aux] == 0) && (dist[aux] > dist[v1] + graph[v2]) && (sptSet[aux] == false)){
-        if(!(i1 != i_aux && j1 != j_aux)){
-            parent[aux] = v1;
-            if(dist[aux] == INT_MAX) flag = 1;
-            else flag = 2;
-            dist[aux] = dist[v1] + graph[v2];
+    if(is_cell_in_board(L, C, i_aux, j_aux)){
+        if((graph[v2] > 0) && (graph[aux] == 0) && (dist[aux] > dist[v1] + graph[v2]) && (sptSet[aux] == false)){
+            if(!(i1 != i_aux && j1 != j_aux)){
+                parent[aux] = v1;
+                if(dist[aux] == INT_MAX) flag = 1;
+                else flag = 2;
+                dist[aux] = dist[v1] + graph[v2];
+            }
         }
     }
     return flag;
@@ -76,7 +78,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     sptSet[0] = true;
     parent[0] = 0;
 
-    connected = connect_2v(dist, parent, sptSet, graph, 0, C, C);
+    connected = connect_2v(dist, parent, sptSet, graph, 0, C, C, L);
     if(connected == 1){
         if(graph[C] == 0)
             push(C, dist, heap, hsize, &lfree);
@@ -84,7 +86,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             push(2 * C, dist, heap, hsize, &lfree);
         
     }
-    connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C);
+    connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C, L);
     if(connected == 1){
         if(graph[1] == 0)
             push(1, dist, heap, hsize, &lfree);
@@ -118,7 +120,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
 
         if(is_cell_in_board(L, C, i, j - 1)){
             idx = get_index(C, i, j - 1);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
             //printf("\n\n1 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - 1, dist[idx - 1]);
             if(connected == 1){
                 if(graph[idx] != 0) idx--;
@@ -133,7 +135,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         }
         if(is_cell_in_board(L, C, i, j + 1)){
             idx = get_index(C, i, j + 1);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
             //printf("2 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + 1, dist[idx + 1]);
             if(connected == 1){
                 if(graph[idx] != 0) idx++;
@@ -148,7 +150,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         }
         if(is_cell_in_board(L, C, i - 1, j)){
             idx = get_index(C, i - 1, j);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
             //printf("3 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - C, dist[idx - C]);
             if(connected == 1){
                 if(graph[idx] != 0) idx -= C;
@@ -163,7 +165,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         }
         if(is_cell_in_board(L, C, i + 1, j)){
             idx = get_index(C, i + 1, j);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
             //printf("4 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + C, dist[idx + C]);
             if(connected == 1){
                 if(graph[idx] != 0) idx += C;
