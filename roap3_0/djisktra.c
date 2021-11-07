@@ -6,26 +6,31 @@
 #include "djisktra.h"
 #include "input.h"
 #include "game_mode.h"
-//#include "LinkedList.h"
+#include "heap.h"
 
-void connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2, int C)
+int connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2, int C)
 {
     int aux = v2 + v2 - v1;
+    int flag = 0;
     int i1 = i_idx(v1, C), j1 = j_idx(v1, C), i2 = i_idx(v2, C), j2 = j_idx(v2, C), i_aux = i_idx(aux, C), j_aux = j_idx(aux, C);
-    if(graph[v2] == 0 && dist[v2] > dist[v1] && sptSet[v2] == false){
+    if((graph[v2] == 0) && (dist[v2] > dist[v1]) && (sptSet[v2] == false)){
         
         if(!(i1 != i2 && j1 != j2)){
             parent[v2] = v1;
+            if(dist[v2] == INT_MAX) flag = 1;
+            else flag = 2;
             dist[v2] = dist[v1];
         }
     }
-    if(graph[v2] > 0 && graph[aux] == 0 && dist[aux] > dist[v1] + graph[v2] && sptSet[aux] == false){
+    if((graph[v2] > 0) && (graph[aux] == 0) && (dist[aux] > dist[v1] + graph[v2]) && (sptSet[aux] == false)){
         if(!(i1 != i_aux && j1 != j_aux)){
             parent[aux] = v1;
+            if(dist[aux] == INT_MAX) flag = 1;
+            else flag = 2;
             dist[aux] = dist[v1] + graph[v2];
         }
     }
-    
+    return flag;
 }
 
 int minDistance(int V, int *dist, bool *sptSet)
@@ -52,55 +57,17 @@ int j_idx(int idx, int C)
 {
     return idx % C;
 }
-/*
-typedef struct _vertice
-{
-    int v;
-    int dist;
-} vertice;
 
-int  compareItems(Item it1, Item it2)
-{
-    int i1, i2;
-
-    i1 = ((vertice*)it1)->dist;
-    i2 = ((vertice*)it2)->dist;
-
-    if (i1 < i2)
-        return -1;
-    if (i1 > i2)
-        return 1;
-    return 0;
-}
-
-LinkedList *Push(LinkedList *head, int v, int *dist)
-{
-    int * err = NULL;
-    vertice *V = (int*) malloc(sizeof(vertice));
-    V->v = v;
-    V->dist = dist[v];
-    head = insertSortedLinkedList(head, (Item) v, compareItems, err);
-    return head;
-}
-
-int Pop(LinkedList **head)
-{
-    LinkedList *aux = (*head);
-    vertice *vert = getItemLinkedList(*head);
-    int v = vert->v;
-    (*head) = getNextNodeLinkedList(*head);
-    free(vert);
-    free(aux);
-    return v;
-}
-*/
-int *djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, int src)
+void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, int src)
 {
     int V = L * C;
     unsigned int i, j, v;
     int u;
-    //LinkedList *Q = initLinkedList();
-    
+    int *heap = (int*) malloc(V * sizeof(int));
+    int hsize, free;
+    int connected, pos, idx;
+    hinit(V, heap, &hsize, &free);
+
     for(v = 0; v < V; v++){
         dist[v] = INT_MAX;
         sptSet[v] = false;
@@ -108,16 +75,40 @@ int *djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     dist[0] = 0;
     sptSet[0] = true;
     parent[0] = 0;
-    connect_2v(dist, parent, sptSet, graph, 0, C, C);
-    connect_2v(dist, parent, sptSet, graph, 0, 1, C);
-    
-    for(v = 0; v < (V - 1); v++){
-        u = minDistance(V, dist, sptSet);
-        if(u == -1) break;
 
-        //printf("u: %d\n", u);
+    connected = connect_2v(dist, parent, sptSet, graph, 0, C, C);
+    if(connected == 1){
+        if(graph[C] == 0)
+            push(C, dist, heap, hsize, &free);
+        else
+            push(2 * C, dist, heap, hsize, &free);
         
-
+    }
+    connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C);
+    if(connected == 1){
+        if(graph[1] == 0)
+            push(1, dist, heap, hsize, &free);
+        else
+            push(2, dist, heap, hsize, &free);
+    }
+    
+    while(free > 0){
+        /*
+        for(int w = 0; w < free; w++)
+        {
+            printf("%d(%d) - ", heap[w], dist[heap[w]]);
+        }
+        printf("\n");
+        */
+        u = pop(heap, dist, &free);
+        /*
+        //printf("u: %d\n", u);
+        for(int w = 0; w < free; w++)
+        {
+            printf("%d(%d) - ", heap[w], dist[heap[w]]);
+        }
+        printf("\n");
+        */
         i = i_idx(u, C);
         j = j_idx(u, C);
         //printf("%d %d\n\n\n", i, j);
@@ -126,19 +117,77 @@ int *djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         if(u == src) break;
 
         if(is_cell_in_board(L, C, i, j - 1)){
-            connect_2v(dist, parent, sptSet, graph, u, get_index(C, i, j - 1), C);
+            idx = get_index(C, i, j - 1);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            //printf("\n\n1 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - 1, dist[idx - 1]);
+            if(connected == 1){
+                if(graph[idx] != 0) idx--;
+                push(idx, dist, heap, hsize, &free);
+            }
+            else if(connected == 2){
+                if(graph[idx] != 0) idx--;
+                pos = get_pos(heap, idx, free);
+                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
+                FixUp(heap, pos, dist);
+            }
         }
         if(is_cell_in_board(L, C, i, j + 1)){
-            connect_2v(dist, parent, sptSet, graph, u, get_index(C, i, j + 1), C);
+            idx = get_index(C, i, j + 1);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            //printf("2 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + 1, dist[idx + 1]);
+            if(connected == 1){
+                if(graph[idx] != 0) idx++;
+                push(idx, dist, heap, hsize, &free);
+            }
+            else if(connected == 2){
+                if(graph[idx] != 0) idx++;
+                pos = get_pos(heap, idx, free);
+                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
+                FixUp(heap, pos, dist);
+            }
         }
         if(is_cell_in_board(L, C, i - 1, j)){
-            connect_2v(dist, parent, sptSet, graph, u, get_index(C, i - 1, j), C);
+            idx = get_index(C, i - 1, j);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            //printf("3 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - C, dist[idx - C]);
+            if(connected == 1){
+                if(graph[idx] != 0) idx -= C;
+                push(idx, dist, heap, hsize, &free);
+            }
+            else if(connected == 2){
+                if(graph[idx] != 0) idx -= C;
+                pos = get_pos(heap, idx, free);
+                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
+                FixUp(heap, pos, dist);
+            }
         }
         if(is_cell_in_board(L, C, i + 1, j)){
-            connect_2v(dist, parent, sptSet, graph, u, get_index(C, i + 1, j), C);
+            idx = get_index(C, i + 1, j);
+            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C);
+            //printf("4 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + C, dist[idx + C]);
+            if(connected == 1){
+                if(graph[idx] != 0) idx += C;
+                push(idx, dist, heap, hsize, &free);
+            }
+            else if(connected == 2){
+                if(graph[idx] != 0) idx += C;
+                pos = get_pos(heap, idx, free);
+                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
+                FixUp(heap, pos, dist);
+            }
         }
-        //printf("%d...\n\n\n\n", v);
-        
+        /*
+        for(int w = 0; w < free; w++)
+        {
+            printf("%d(%d) - ", heap[w], dist[heap[w]]);
+        }
+        printf("\n\n\n\n");
+        */
+        /*
+        int rand;
+        scanf("%d", &rand);
+        printf("%d\n", dist[rand]);
+        */
     }
-    return dist;
+    return;
 }

@@ -3,7 +3,7 @@ PROJECT_NAME = roap #target file name
 CC = gcc #compiler
 CFLAGS = -Wall -std=c99 -g
 
-OBJECTS = main.o input.o output.o game_mode.o djisktra.o #objects
+OBJECTS = main.o input.o output.o game_mode.o djisktra.o heap.o #objects
 
 all: $(PROJECT_NAME)
 
@@ -15,6 +15,7 @@ input.o: input.c input.h
 output.o: output.c output.h
 game_mode.o: game_mode.c game_mode.h
 djisktra.o: djisktra.c djisktra.h input.h game_mode.h
+heap.o: heap.c heap.h 
 
 FILES_1=$(shell ls ../Bilhar_Pequeno/*.in)
 FILES_2=$(shell ls ../Chess_Party/*.in)
