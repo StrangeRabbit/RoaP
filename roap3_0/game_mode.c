@@ -412,7 +412,7 @@ bool is_black(cell position)
 }
 
 /**
- * @brief Confirms if treasure cell is adjacent to starting point (0,0)
+ * @brief Confirms if treasure cell is adjacent to starting point (0,0) or is source
  * @param i line of trease cell
  * @param j column of treasure cell
  * @return true if cell adjacent, falsez otherwise
@@ -420,7 +420,47 @@ bool is_black(cell position)
 
 bool treasure_is_adjacent_to_src(int i, int j)
 {
-    if ((i == 0 && j == 1) || (i == 1 && j == 0))
+    if ((i == 0 && j == 1) || (i == 1 && j == 0) || (i == 0 && j == 0))
         return true;
     return false;
+}
+
+int another_checks(int l, int c, FILE *fp, int P, int treasure_x, int treasure_y)
+{
+    bool flag1[4] = {false};
+    int aux1 = 0, aux2 = 0, aux3 = 0;
+    for (int i = 0; i < P; i++)
+    {
+        if (fscanf(fp, "%d %d %d", &aux1, &aux2, &aux3) != 3)
+            exit(0);
+
+        aux1 -= 1;
+        aux2 -= 1;
+
+        if (aux1 <= 2 && aux2 <= 2)
+            checkSrc(aux1, aux2, aux3, flag1);
+    }
+}
+
+// Verifica se a src é saivel
+void checkSrc(int aux1, int aux2, int aux3, bool *flag)
+{
+    if (aux1 == 1 && aux2 == 0)
+    {
+        if (aux3 == -1)
+            flag[3] = flag[2] == true;
+        else
+            flag[2] == true;
+    }
+    else if (aux1 == 0 && aux2 == 1)
+    {
+        if (aux3 == -1)
+            flag[0] = flag[1] == true;
+        else
+            flag[0] == true;
+    }
+    else if (aux1 == 0 && aux2 == 2)
+        flag[1] = true;
+    else if (aux1 == 2 && aux2 == 0)
+        flag[3] = true;
 }
