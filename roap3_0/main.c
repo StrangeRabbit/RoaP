@@ -10,8 +10,10 @@
 
 #define MAX 100
 
-void print_walls(int V, int C, int *dist, int *parent, int *graph, int walls, FILE *fp)
+
+void print_walls(int P, int src, int *walls, int *graph, FILE *fp, int C)
 {
+<<<<<<< HEAD
     int aux = parent[V] - V;
     int v = V + aux / 2;
     int caller = aux != 1 && aux != -1 && aux != C && aux != -C;
@@ -34,8 +36,42 @@ void print_walls(int V, int C, int *dist, int *parent, int *graph, int walls, FI
     {
         fprintf(fp, "%d %d %d\n", i_idx(v, C) + 1, j_idx(v, C) + 1, graph[v]);
         //fprintf(fp, "%d %d %d -- %d\n", V, v, parent[V], aux);
+=======
+    int i;
+    for(i = P - 1; i >= 0; i--){
+        fprintf(fp, "%d %d %d\n", i_idx(walls[i], C) + 1, j_idx(walls[i], C) + 1, graph[walls[i]]);
+>>>>>>> fe12e68 (no recursives anymore)
     }
     return;
+}
+
+int count_walls(int *parent, int src, int C)
+{
+    int aux, wall = 0;
+    while(src != 0){
+        aux = parent[src] - src;
+        if(aux != 1 && aux != -1 && aux != C && aux != -C)
+            wall++;
+        src = parent[src];
+    }
+    return wall;
+}
+
+int *get_walls(int *parent, int src, int W, int C)
+{
+    int *walls = (int*) malloc(sizeof(int) * W);
+    int aux, wall = 0;
+    int i = 0;
+    while(src != 0){
+        aux = parent[src] - src;
+        if(aux != 1 && aux != -1 && aux != C && aux != -C){
+            wall = src + aux / 2;
+            walls[i] = wall;
+            i++;
+        }
+        src = parent[src];
+    }
+    return walls;
 }
 
 /** 
@@ -47,7 +83,8 @@ void print_walls(int V, int C, int *dist, int *parent, int *graph, int walls, FI
 int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
-    int L, C, V, i, j, P, treasure;
+    int L, C, V, i, j, P, treasure, W;
+    int *walls;
     mode game_mode;
     _project project = FINAL;
     FILE *fp;
@@ -190,7 +227,10 @@ int main(int argc, char **argv)
 
             default:
                 fprintf(ofp, "%d\n", dist[treasure]);
-                print_walls(treasure, C, dist, parent, graph, 0, ofp);
+                W = count_walls(parent, treasure, C);
+                fprintf(ofp, "%d\n", W);
+                walls = get_walls(parent, treasure, W, C);
+                print_walls(W, treasure, walls, graph, ofp, C);
                 fprintf(ofp, "\n");
                 break;
             }
