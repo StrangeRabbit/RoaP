@@ -197,6 +197,9 @@ int main(int argc, char **argv)
             printf("\n\n\n\n\n\n\n\n");
             */
             free(graph);
+            free(dist);
+            free(parent);
+            free(sptSet);
         }
         
     }
