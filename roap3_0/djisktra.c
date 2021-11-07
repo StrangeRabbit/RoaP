@@ -64,9 +64,9 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     unsigned int i, j, v;
     int u;
     int *heap = (int*) malloc(V * sizeof(int));
-    int hsize, free;
+    int hsize, lfree;
     int connected, pos, idx;
-    hinit(V, heap, &hsize, &free);
+    hinit(V, heap, &hsize, &lfree);
 
     for(v = 0; v < V; v++){
         dist[v] = INT_MAX;
@@ -79,31 +79,31 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     connected = connect_2v(dist, parent, sptSet, graph, 0, C, C);
     if(connected == 1){
         if(graph[C] == 0)
-            push(C, dist, heap, hsize, &free);
+            push(C, dist, heap, hsize, &lfree);
         else
-            push(2 * C, dist, heap, hsize, &free);
+            push(2 * C, dist, heap, hsize, &lfree);
         
     }
     connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C);
     if(connected == 1){
         if(graph[1] == 0)
-            push(1, dist, heap, hsize, &free);
+            push(1, dist, heap, hsize, &lfree);
         else
-            push(2, dist, heap, hsize, &free);
+            push(2, dist, heap, hsize, &lfree);
     }
     
-    while(free > 0){
+    while(lfree > 0){
         /*
-        for(int w = 0; w < free; w++)
+        for(int w = 0; w < lfree; w++)
         {
             printf("%d(%d) - ", heap[w], dist[heap[w]]);
         }
         printf("\n");
         */
-        u = pop(heap, dist, &free);
+        u = pop(heap, dist, &lfree);
         /*
         //printf("u: %d\n", u);
-        for(int w = 0; w < free; w++)
+        for(int w = 0; w < lfree; w++)
         {
             printf("%d(%d) - ", heap[w], dist[heap[w]]);
         }
@@ -122,11 +122,11 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             //printf("\n\n1 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - 1, dist[idx - 1]);
             if(connected == 1){
                 if(graph[idx] != 0) idx--;
-                push(idx, dist, heap, hsize, &free);
+                push(idx, dist, heap, hsize, &lfree);
             }
             else if(connected == 2){
                 if(graph[idx] != 0) idx--;
-                pos = get_pos(heap, idx, free);
+                pos = get_pos(heap, idx, lfree);
                 //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
                 FixUp(heap, pos, dist);
             }
@@ -137,11 +137,11 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             //printf("2 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + 1, dist[idx + 1]);
             if(connected == 1){
                 if(graph[idx] != 0) idx++;
-                push(idx, dist, heap, hsize, &free);
+                push(idx, dist, heap, hsize, &lfree);
             }
             else if(connected == 2){
                 if(graph[idx] != 0) idx++;
-                pos = get_pos(heap, idx, free);
+                pos = get_pos(heap, idx, lfree);
                 //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
                 FixUp(heap, pos, dist);
             }
@@ -152,11 +152,11 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             //printf("3 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - C, dist[idx - C]);
             if(connected == 1){
                 if(graph[idx] != 0) idx -= C;
-                push(idx, dist, heap, hsize, &free);
+                push(idx, dist, heap, hsize, &lfree);
             }
             else if(connected == 2){
                 if(graph[idx] != 0) idx -= C;
-                pos = get_pos(heap, idx, free);
+                pos = get_pos(heap, idx, lfree);
                 //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
                 FixUp(heap, pos, dist);
             }
@@ -167,17 +167,18 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             //printf("4 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + C, dist[idx + C]);
             if(connected == 1){
                 if(graph[idx] != 0) idx += C;
-                push(idx, dist, heap, hsize, &free);
+                push(idx, dist, heap, hsize, &lfree);
             }
             else if(connected == 2){
                 if(graph[idx] != 0) idx += C;
-                pos = get_pos(heap, idx, free);
+                pos = get_pos(heap, idx, lfree);
                 //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
                 FixUp(heap, pos, dist);
             }
         }
+        free(heap);
         /*
-        for(int w = 0; w < free; w++)
+        for(int w = 0; w < lfreee; w++)
         {
             printf("%d(%d) - ", heap[w], dist[heap[w]]);
         }
