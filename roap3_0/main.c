@@ -66,7 +66,6 @@ int main(int argc, char **argv)
     FILE *ofp;
     char *filename;
     int flag;
-    int flag2 = 0;
     char output_filename[MAX];
     cell *matrix;
     int *graph;
@@ -90,7 +89,7 @@ int main(int argc, char **argv)
     // Start to read the map
     while (fscanf(fp, "%d %d", &L, &C) == 2)
     {
-        flag = 0;
+        flag = 1;
         if (project == INTERMEDIO)
         {
             get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &P);
@@ -140,38 +139,31 @@ int main(int argc, char **argv)
         }
         else
         {
-            V = L * C;
             get_header_final(fp, &i, &j, &P);
-            if (is_cell_in_board(L, C, i, j) == false)
-                flag = -1;
-            if (treasure_is_adjacent_to_src(i, j))
-                flag = 0;
+            V = L * C;
+            if (is_cell_in_board(L, C, i, j) == false){
+                jump_map(fp, P);
+                fprintf(ofp, "%d\n\n", -1);
+                continue;
+            }
+            if (treasure_is_adjacent_to_src(i, j)){
+                jump_map(fp, P);
+                fprintf(ofp, "%d\n\n", 0);
+                continue;
+            }
 
             position = ftell(fp);
-            flag2 = another_checks(L, C, fp, P, i, j);
-            /*printf("%d", flag2);*/
-
-            if (flag2 == -1)
-                flag = -1;
-
-            else if (flag2 == 1)
-            {
+            
+            flag = check(fp, P, i, j);
+            
+            if(flag == 1)
                 fseek(fp, position, SEEK_SET);
-            }
-
-            if (flag == 0)
+            else 
             {
-                //jump_map(fp, P);
                 fprintf(ofp, "%d\n\n", flag);
                 continue;
             }
-            if (flag == -1)
-            {
-                //jump_map(fp, P); //map already read
-                fprintf(ofp, "%d\n\n", flag);
-                continue;
-            }
-
+            
             graph = build_graph(fp, C, V, P);
 
             int *dist = (int *)malloc(V * sizeof(int));

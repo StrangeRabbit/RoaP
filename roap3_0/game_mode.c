@@ -425,42 +425,137 @@ bool treasure_is_adjacent_to_src(int i, int j)
     return false;
 }
 
-int another_checks(int l, int c, FILE *fp, int P, int treasure_x, int treasure_y)
+bool can_get_out(int r1, int r2, int d1, int d2)
 {
-    bool flag1[4] = {false};
-    int aux1 = 0, aux2 = 0, aux3 = 0;
-    for (int i = 0; i < P; i++)
-    {
-        if (fscanf(fp, "%d %d %d", &aux1, &aux2, &aux3) != 3)
+    if(r1 == -1 && r2 == -1) return false;
+    if(r1 == 1 && r2 != 0 && d1 == 1 && d2 != 0) return false;
+    if(r1 == -1 && d1 == 1 && d2 != 0) return false;
+    if(r1 == 1 && r2 != 0 && d1 == -1) return false;
+    return true;
+}
+
+bool reachable(int r1, int r2, int u1, int u2, int l1, int l2, int d1, int d2)
+{
+    if(r1 == -1 && l1 == -1 && u1 == -1 && d1 == -1) return false;
+    if(r1 == -1 && l1 == -1 && u1 == -1 && d1 == 1 && d2 != 0) return false;
+    if(r1 == -1 && l1 == -1 && u1 == 1 && d1 == -1 && u2 != 0) return false;
+    if(r1 == -1 && l1 == 1 && u1 == -1 && d1 == -1 && l2 != 0) return false;
+    if(r1 == 1 && l1 == -1 && u1 == -1 && d1 == -1 && r2 != 0) return false;
+    if(r1 == 1 && l1 == 1 && u1 == -1 && d1 == -1 && r2 != 0 && l2 != 0) return false;
+    if(r1 == 1 && l1 == -1 && u1 == 1 && d1 == -1 && r2 != 0 && u2 != 0) return false;
+    if(r1 == 1 && l1 == -1 && u1 == -1 && d1 == 1 && r2 != 0 && d2 != 0) return false;
+    if(r1 == -1 && l1 == 1 && u1 == 1 && d1 == -1 && l2 != 0 && u2 != 0) return false;
+    if(r1 == -1 && l1 == 1 && u1 == -1 && d1 == 1 && l2 != 0 && d2 != 0) return false;
+    if(r1 == -1 && l1 == -1 && u1 == 1 && d1 == 1 && u2 != 0 && d2 != 0) return false;
+    if(r1 == 1 && l1 == 1 && u1 == 1 && d1 == -1 && r2 != 0 && l2 != 0 && u2 != 0) return false;
+    if(r1 == 1 && l1 == 1 && u1 == -1 && d1 == 1 && r2 != 0 && l2 != 0 && d2 != 0) return false;
+    if(r1 == 1 && l1 == -1 && u1 == 1 && d1 == 1 && r2 != 0 && u2 != 0 && d2 != 0) return false;
+    if(r1 == -1 && l1 == 1 && u1 == 1 && d1 == 1 && l2 != 0 && u2 != 0 && d2 != 0) return false;
+    if(r1 == 1 && l1 == 1 && u1 == 1 && d1 == 1 && r2 != 0 && l2 != 0 && u2 != 0 && d2 != 0) return false;
+    return true;
+}
+
+int check(FILE *fp, int P, int src_i, int src_j)
+{
+    int r1 = 0, r2 = 0, d1 = 0, d2 = 0;
+    int rr1 = 0, rr2 = 0, uu1 = 0, uu2 = 0, ll1 = 0, ll2 = 0, dd1 = 0, dd2 = 0;
+    int flag = 1;
+    int min_j, min_i = -1;
+    int i, j, v;
+    if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3)
+        exit(0);
+    i--;
+    j--;
+    if(i >= src_i && src_i != 0){
+        flag = 0;
+    }
+    else if(src_i == 0 && j > src_j){
+        flag = 0;
+    }
+    min_j = j;
+    if(j == 0) min_i = i;
+    
+    
+    for (int a = 1; a < P; a++){
+        if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3)
             exit(0);
 
-        aux1 -= 1;
-        aux2 -= 1;
+        i--;
+        j--;
 
-        if (aux1 <= 2 && aux2 <= 2)
-            checkSrc(aux1, aux2, aux3, flag1);
+        if(i == 0 && j == 0) {
+            flag = -1;
+            jump_map(fp, a + 1);
+            break;
+        }
+        if(i == src_i && j == src_j){
+            flag = -1;
+            jump_map(fp, a + 1);
+            break;
+        }
+        if(i == 0 && j == 1){
+            if (v == -1) r1 = -1;
+            else r1 = 1;
+        }
+        if(i == 0 && j == 2){
+            if (v == -1) r2 = -1;
+            else r2 = 1;
+        }
+        if(i == 1 && j == 0){
+            if (v == -1) d1 = -1;
+            else d1 = 1;
+        }
+        if(i == 2 && j == 0){
+            if (v == -1) d2 = -1;
+            else d2 = 1;
+        }
+        if(i == src_i - 1 && j == src_j){
+            if (v == -1) dd1 = -1;
+            else dd1 = 1;
+        }
+        if(i == src_i - 2 && j == src_j){
+            if (v == -1) dd2 = -1;
+            else dd2 = 1;
+        }
+        if(i == src_i + 1 && j == src_j){
+            if (v == -1) uu1 = -1;
+            else uu1 = 1;
+        }
+        if(i == src_i + 2 && j == src_j){
+            if (v == -1) uu2 = -1;
+            else uu2 = 1;
+        }
+        if(i == src_i && j == src_j + 1){
+            if (v == -1) rr1 = -1;
+            else rr1 = 1;
+        }
+        if(i == src_i && j == src_j + 2){
+            if (v == -1) rr2 = -1;
+            else rr2 = 1;
+        }
+        if(i == src_i && j == src_j - 1){
+            if (v == -1) ll1 = -1;
+            else ll1 = 1;
+        }
+        if(i == src_i && j == src_j - 2){
+            if (v == -1) ll2 = -1;
+            else ll2 = 1;
+        }
+
+        if(j < min_j) min_j = j;
+        if(j == 0 && min_i == -1) min_i = i; 
     }
+
+    if(can_get_out(r1, r2, d1, d2) == false) return -1;
+    if(reachable(rr1, rr2, uu1, uu2, ll1, ll2, dd1, dd2) == false) return -1;
+
+    if(min_j >= src_j && src_j != 0){
+        flag = 0;
+    }
+    else if(src_j == 0 && min_i > src_i){
+        flag = 0;
+    }
+    return flag;
 }
 
 // Verifica se a src é saivel
-void checkSrc(int aux1, int aux2, int aux3, bool *flag)
-{
-    if (aux1 == 1 && aux2 == 0)
-    {
-        if (aux3 == -1)
-            flag[3] = flag[2] == true;
-        else
-            flag[2] == true;
-    }
-    else if (aux1 == 0 && aux2 == 1)
-    {
-        if (aux3 == -1)
-            flag[0] = flag[1] == true;
-        else
-            flag[0] == true;
-    }
-    else if (aux1 == 0 && aux2 == 2)
-        flag[1] = true;
-    else if (aux1 == 2 && aux2 == 0)
-        flag[3] = true;
-}
