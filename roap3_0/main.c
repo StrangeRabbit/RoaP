@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
     int L, C, V, i, j, P, treasure, W;
-    int *walls;
+    int *walls = NULL;
     mode game_mode;
     _project project = FINAL;
     FILE *fp;
@@ -168,14 +168,14 @@ int main(int argc, char **argv)
                 fprintf(ofp, "%d\n\n", 0);
                 continue;
             }
-            
+            /*
             for(i1 = 0; i1 < V; i1++)
             {
                 if(i1 % C == 0) printf("\n");
                 printf("%3d ", graph[i1]);
             }
             printf("\n\n\n");
-            
+            */
             int *dist = (int *)malloc(V * sizeof(int));
             if (dist == NULL)
                 exit(0);
@@ -217,7 +217,10 @@ int main(int argc, char **argv)
                 fprintf(ofp, "\n");
                 break;
             }
-
+	    if(walls != NULL){
+	    	free(walls);
+		walls = NULL;
+	    }
             free(graph);
             free(dist);
             free(parent);
