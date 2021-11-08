@@ -152,10 +152,11 @@ int main(int argc, char **argv)
                 continue;
             }
 
+            
             position = ftell(fp);
-            
+            /*
             flag = check(fp, P, i, j);
-            
+            printf("%d\n", flag);
             if(flag == 1)
                 fseek(fp, position, SEEK_SET);
             else 
@@ -163,9 +164,16 @@ int main(int argc, char **argv)
                 fprintf(ofp, "%d\n\n", flag);
                 continue;
             }
-            
+            */
             graph = build_graph(fp, C, V, P);
-
+            /*
+            for(i1 = 0; i1 < V; i1++)
+            {
+                if(i1 % C == 0) printf("\n");
+                printf("(%2d)%3d ", i1, graph[i1]);
+            }
+            printf("\n\n\n");
+            */
             int *dist = (int *)malloc(V * sizeof(int));
             if (dist == NULL)
                 exit(0);
@@ -177,11 +185,17 @@ int main(int argc, char **argv)
             bool *sptSet = (bool *)malloc(V * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
-
             treasure = get_index(C, i, j);
 
             djisktra(graph, L, C, dist, parent, sptSet, treasure);
 
+            /*
+            printf("%d %d\n", i, j);
+            printf("treasure - %d\n", treasure);
+            for(i1 = 0; i1 < V; i1++)
+                printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
+            printf("\n\n");
+            */
             switch (dist[treasure])
             {
             case INT_MAX:

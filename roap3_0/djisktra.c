@@ -179,7 +179,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
             }
         }
         /*
-        for(int w = 0; w < lfreee; w++)
+        for(int w = 0; w < lfree; w++)
         {
             printf("%d(%d) - ", heap[w], dist[heap[w]]);
         }

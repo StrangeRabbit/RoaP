@@ -33,7 +33,7 @@ void FixUp(int heap[], int idx, int dist[])
 void FixDown(int free, int heap[], int idx, int dist[])
 {
     int child;
-    while(idx * 2 + 1 < free - 1){
+    while(idx * 2 < free - 1){
         child = 2 * idx + 1;
 
         if(child < (free - 1) && highPri(heap[child + 1], heap[child])) child++;
