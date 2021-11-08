@@ -65,11 +65,10 @@ int main(int argc, char **argv)
     FILE *fp;
     FILE *ofp;
     char *filename;
-    int flag;
+    int min_j, min_i, flag;
     char output_filename[MAX];
     cell *matrix;
     int *graph;
-    unsigned long position = 0;
     if (argc == 3)
     {
         project = INTERMEDIO;
@@ -152,28 +151,31 @@ int main(int argc, char **argv)
                 continue;
             }
 
-            
-            position = ftell(fp);
-            /*
-            flag = check(fp, P, i, j);
-            printf("%d\n", flag);
-            if(flag == 1)
-                fseek(fp, position, SEEK_SET);
-            else 
-            {
-                fprintf(ofp, "%d\n\n", flag);
+            if(fscanf(fp, "%d %d %d", &i1, &j1, &flag) != 3) exit(0);
+            i1--; j1--;
+            if((i1 >= i && i != 0) || (i == 0 && j1 > j)){
+                jump_map(fp, P - 1);
+                fprintf(ofp, "%d\n\n", 0);
                 continue;
             }
-            */
-            graph = build_graph(fp, C, V, P);
-            /*
+
+            min_j = j1;
+            min_i = INT_MAX;
+            graph = build_graph(fp, C, V, P - 1, &min_j, &min_i);
+
+            graph[get_index(C, i1, j1)] = flag;
+            if((min_j >= j && j != 0) || (j == 0 && min_i > i)){
+                fprintf(ofp, "%d\n\n", 0);
+                continue;
+            }
+            
             for(i1 = 0; i1 < V; i1++)
             {
                 if(i1 % C == 0) printf("\n");
-                printf("(%2d)%3d ", i1, graph[i1]);
+                printf("%3d ", graph[i1]);
             }
             printf("\n\n\n");
-            */
+            
             int *dist = (int *)malloc(V * sizeof(int));
             if (dist == NULL)
                 exit(0);

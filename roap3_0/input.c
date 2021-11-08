@@ -169,7 +169,7 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
  * @return double pointer to the graph
  */
 
-int *build_graph(FILE *fp, int C, int V, int P)
+int *build_graph(FILE *fp, int C, int V, int P, int *min_j, int *min_i)
 {
     unsigned int p;
     int i, j, v, idx;
@@ -182,6 +182,8 @@ int *build_graph(FILE *fp, int C, int V, int P)
         if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3) exit(0);
         i--; j--;
         idx = get_index(C, i, j);
+        if(j < (*min_j)) (*min_j) = j;
+        if(j == 0 && i < (*min_i)) (*min_i) = i;
         graph[idx] = v;
     }
 
