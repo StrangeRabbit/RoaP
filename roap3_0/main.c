@@ -69,16 +69,17 @@ int main(int argc, char **argv)
     char output_filename[MAX];
     cell *matrix;
     int *graph;
-    if(argc == 3){
+    unsigned long position = 0;
+    if (argc == 3)
+    {
         project = INTERMEDIO;
     }
-
 
     // Prepares the program to start receving information
     //program_caller_checker(argc, argv);
     filename = get_filename(argc, argv);
     fp = open_file(filename, argc);
-    if(project == INTERMEDIO)
+    if (project == INTERMEDIO)
         create_filename(argc, argv, output_filename);
     else
         create_filename_final(argc, argv, output_filename);
@@ -88,8 +89,9 @@ int main(int argc, char **argv)
     // Start to read the map
     while (fscanf(fp, "%d %d", &L, &C) == 2)
     {
-        flag = 0;
-        if(project == INTERMEDIO){
+        flag = 1;
+        if (project == INTERMEDIO)
+        {
             get_header(fp, &game_mode, &i1, &j1, &i2, &j2, &P);
 
             if (is_cell_in_board(L, C, i1, j1) == false)
@@ -135,50 +137,57 @@ int main(int argc, char **argv)
             // Frees the board
             free(matrix);
         }
-        else{
-            V = L * C;
+        else
+        {
             get_header_final(fp, &i, &j, &P);
-            if (is_cell_in_board(L, C, i, j) == false)
-                flag = -1;
-            if(treasure_is_adjacent_to_src(i, j))
-                flag = -1;
-
-            if (flag == -1)
-            {
+            V = L * C;
+            if (is_cell_in_board(L, C, i, j) == false){
                 jump_map(fp, P);
-                fprintf(ofp, "%d\n\n", flag);
+                fprintf(ofp, "%d\n\n", -1);
+                continue;
+            }
+            if (treasure_is_adjacent_to_src(i, j)){
+                jump_map(fp, P);
+                fprintf(ofp, "%d\n\n", 0);
                 continue;
             }
 
-            graph = build_graph(fp, C, V, P);
-            /*
-            for (i1 = 0; i1 < V; i1++)
+            position = ftell(fp);
+            
+            flag = check(fp, P, i, j);
+            
+            if(flag == 1)
+                fseek(fp, position, SEEK_SET);
+            else 
             {
-                if(i1 % C == 0) printf("\n");
-                printf("(%3d)%3d   ", i1, graph[i1]);
+                fprintf(ofp, "%d\n\n", flag);
+                continue;
             }
-            printf("\n\n\n\n\n\n");
-            */
-            int *dist = (int*) malloc(V * sizeof(int));
-            if(dist == NULL) exit(0);
-    
-            int *parent = (int*) malloc(V * sizeof(int));
-            if(parent == NULL) exit(0);
+            
+            graph = build_graph(fp, C, V, P);
 
-            bool *sptSet = (bool*) malloc(V * sizeof(bool));
-            if(sptSet == NULL) exit(0);
+            int *dist = (int *)malloc(V * sizeof(int));
+            if (dist == NULL)
+                exit(0);
+
+            int *parent = (int *)malloc(V * sizeof(int));
+            if (parent == NULL)
+                exit(0);
+
+            bool *sptSet = (bool *)malloc(V * sizeof(bool));
+            if (sptSet == NULL)
+                exit(0);
 
             treasure = get_index(C, i, j);
 
             djisktra(graph, L, C, dist, parent, sptSet, treasure);
-            //printf("out...\n\n\n\n");
-            
+
             switch (dist[treasure])
             {
             case INT_MAX:
                 fprintf(ofp, "-1\n\n");
                 break;
-            
+
             case 0:
                 fprintf(ofp, "%d\n\n", dist[treasure]);
                 break;
@@ -192,38 +201,14 @@ int main(int argc, char **argv)
                 fprintf(ofp, "\n");
                 break;
             }
-            /*
-            for (i = 0; i < V; i++)
-            {
-                if(i % C == 0) printf("\n");
-                if(dist[i] == INT_MAX) printf("(%3d)  i - ", i);
-                else printf("(%3d)%3d - ", i, dist[i]);
-            }
-            printf("\n\n\n");
-            for (i = 0; i < V; i++)
-            {
-                if(i % C == 0) printf("\n");
-                printf("(%3d)%3d - ", i, parent[i]);
-            }
-            printf("\n\n\n");
-            
-            for (i = 0; i < V; i++)
-            {
-                if(i % C == 0) printf("\n");
-                printf("(%3d)%3d - ", i, sptSet[i]);
-            }
-            
-            printf("\n\n\n\n\n\n\n\n");
-            */
+
             free(graph);
             free(dist);
             free(parent);
             free(sptSet);
         }
-        
     }
-    //printf("done\n\n\n\n");
-    
+
     // Closes all the files
     fclose(ofp);
     fclose(fp);
