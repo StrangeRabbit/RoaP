@@ -10,11 +10,11 @@
 
 #define MAX 100
 
-
 void print_walls(int P, int src, int *walls, int *graph, FILE *fp, int C)
 {
     int i;
-    for(i = P - 1; i >= 0; i--){
+    for (i = P - 1; i >= 0; i--)
+    {
         fprintf(fp, "%d %d %d\n", i_idx(walls[i], C) + 1, j_idx(walls[i], C) + 1, graph[walls[i]]);
     }
     return;
@@ -23,9 +23,10 @@ void print_walls(int P, int src, int *walls, int *graph, FILE *fp, int C)
 int count_walls(int *parent, int src, int C)
 {
     int aux, wall = 0;
-    while(src != 0){
+    while (src != 0)
+    {
         aux = parent[src] - src;
-        if(aux != 1 && aux != -1 && aux != C && aux != -C)
+        if (aux != 1 && aux != -1 && aux != C && aux != -C)
             wall++;
         src = parent[src];
     }
@@ -34,12 +35,14 @@ int count_walls(int *parent, int src, int C)
 
 int *get_walls(int *parent, int src, int W, int C)
 {
-    int *walls = (int*) malloc(sizeof(int) * W);
+    int *walls = (int *)malloc(sizeof(int) * W);
     int aux, wall = 0;
     int i = 0;
-    while(src != 0){
+    while (src != 0)
+    {
         aux = parent[src] - src;
-        if(aux != 1 && aux != -1 && aux != C && aux != -C){
+        if (aux != 1 && aux != -1 && aux != C && aux != -C)
+        {
             wall = src + aux / 2;
             walls[i] = wall;
             i++;
@@ -57,7 +60,7 @@ int *get_walls(int *parent, int src, int W, int C)
  */
 int main(int argc, char **argv)
 {
-    int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
+    int i1 = 0, j1 = 0, i2 = 0, j2 = 0, success = 0;
     int L, C, V, i, j, P, treasure, W;
     int *walls = NULL;
     mode game_mode;
@@ -140,20 +143,25 @@ int main(int argc, char **argv)
         {
             get_header_final(fp, &i, &j, &P);
             V = L * C;
-            if (is_cell_in_board(L, C, i, j) == false){
+            if (is_cell_in_board(L, C, i, j) == false)
+            {
                 jump_map(fp, P);
                 fprintf(ofp, "%d\n\n", -1);
                 continue;
             }
-            if (treasure_is_adjacent_to_src(i, j)){
+            if (treasure_is_adjacent_to_src(i, j))
+            {
                 jump_map(fp, P);
                 fprintf(ofp, "%d\n\n", 0);
                 continue;
             }
 
-            if(fscanf(fp, "%d %d %d", &i1, &j1, &flag) != 3) exit(0);
-            i1--; j1--;
-            if((i1 >= i && i != 0) || (i == 0 && j1 > j)){
+            if (fscanf(fp, "%d %d %d", &i1, &j1, &flag) != 3)
+                exit(0);
+            i1--;
+            j1--;
+            if ((i1 >= i && i != 0) || (i == 0 && j1 > j))
+            {
                 jump_map(fp, P - 1);
                 fprintf(ofp, "%d\n\n", 0);
                 continue;
@@ -163,19 +171,22 @@ int main(int argc, char **argv)
             min_i = INT_MAX;
             graph = build_graph(fp, C, V, P - 1, &min_j, &min_i);
 
+            CWQU(graph, L, C);
+
+            if (same_root(graph, C, L, 0, 0, i, j))
+            {
+                fprintf(ofp, "%d\n", 0); // Estão na mesma sala
+                free(graph);
+                continue;
+            }
+
             graph[get_index(C, i1, j1)] = flag;
-            if((min_j >= j && j != 0) || (j == 0 && min_i > i)){
+            if ((min_j >= j && j != 0) || (j == 0 && min_i > i))
+            {
                 fprintf(ofp, "%d\n\n", 0);
                 continue;
             }
-            /*
-            for(i1 = 0; i1 < V; i1++)
-            {
-                if(i1 % C == 0) printf("\n");
-                printf("%3d ", graph[i1]);
-            }
-            printf("\n\n\n");
-            */
+
             int *dist = (int *)malloc(V * sizeof(int));
             if (dist == NULL)
                 exit(0);
@@ -217,10 +228,11 @@ int main(int argc, char **argv)
                 fprintf(ofp, "\n");
                 break;
             }
-	    if(walls != NULL){
-	    	free(walls);
-		walls = NULL;
-	    }
+            if (walls != NULL)
+            {
+                free(walls);
+                walls = NULL;
+            }
             free(graph);
             free(dist);
             free(parent);

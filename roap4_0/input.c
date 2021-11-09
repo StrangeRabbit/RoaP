@@ -79,12 +79,14 @@ FILE *open_file(char *filename, int argc)
 bool file_checker(char *filename, int argc)
 {
     int len = strlen(filename);
-    if(argc == 3){
+    if (argc == 3)
+    {
         if (strcmp(&filename[len - 4], ".in1") == 0)
             return true;
     }
-    else if(argc == 2){
-        if(strcmp(&filename[len - 3], ".in") == 0)
+    else if (argc == 2)
+    {
+        if (strcmp(&filename[len - 3], ".in") == 0)
             return true;
     }
     return false;
@@ -128,7 +130,7 @@ void get_header_final(FILE *fp, int *i, int *j, int *wall_number)
 
     if (fscanf(fp, "%d %d", i, j) != 2)
         exit(0);
-    
+
     if (fscanf(fp, "%d", wall_number) != 1)
         exit(0);
     // adapt coordinates to our matrix
@@ -175,15 +177,14 @@ int *build_graph(FILE *fp, int C, int V, int P, int *min_j, int *min_i)
     int i, j, v, idx;
 
     int *graph = init_graph(V);
-    
 
     for (p = 0; p < P; p++)
     {
-        if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3) exit(0);
-        i--; j--;
+        if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3)
+            exit(0);
+        i--;
+        j--;
         idx = get_index(C, i, j);
-        if(j < (*min_j)) (*min_j) = j;
-        if(j == 0 && i < (*min_i)) (*min_i) = i;
         graph[idx] = v;
     }
 
@@ -199,10 +200,11 @@ int *build_graph(FILE *fp, int C, int V, int P, int *min_j, int *min_i)
 int *init_graph(int V)
 {
     unsigned int i;
-    int *graph = (int *) malloc(V * sizeof(sizeof(int)));
-    if(graph == 0) exit(0);
-    
-    for(i = 0; i < V; i++)
+    int *graph = (int *)malloc(V * sizeof(sizeof(int)));
+    if (graph == 0)
+        exit(0);
+
+    for (i = 0; i < V; i++)
         graph[i] = 0;
     return graph;
 }
