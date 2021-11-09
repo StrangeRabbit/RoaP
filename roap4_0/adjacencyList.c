@@ -12,33 +12,27 @@
  */
 int CRN(int *graph, int L, int C, int *group)
 {
-      int lastRoot = -1;
-      int aux = 0;
+      int lastOldRoot = 0;
+      int newRoot = -1;
       int p = 0;
 
-      /*
-      for (int i = 0; i < L; i++)
+      for (unsigned int i = 0; i < L * C; i++)
       {
-            for (int j = 0; j < C; j++)
+            p = getRoot(group, i);
+            if (lastOldRoot < p)
             {
-                  printf("%d ", group[i * C + j]);
-            }
-            printf("\n");
-      }*/
-
-      for (int i = 0; i < L * C; i++)
-      {
-            if (graph[i] == 0)
-            {
-                  p = getRoot(group, i);
-                  if (p > lastRoot)
+                  newRoot += 1;
+                  group[i] = newRoot;
+                  lastOldRoot = p;
+                  for (unsigned int j = i; j < L * C; j++)
                   {
-                        lastRoot = p;
-                        aux++;
+                        if (group[j] == p)
+                              group[j] = newRoot;
                   }
             }
       }
-      return aux;
+
+      return newRoot;
 }
 
 /**
@@ -63,6 +57,8 @@ int *CWQU2(int *matrix, int row, int column, int *group, int *sz)
                   sz[i] = 1;
                   group[i] = i;
             }
+            else
+                  group[i] = -1;
       }
 
       // Moves through the map
@@ -89,33 +85,34 @@ int *CWQU2(int *matrix, int row, int column, int *group, int *sz)
                                     ;
 
                               // Compares 2 roots
-                              if (p == q)
-                                    continue;
+                              if (p != q)
+                              {
 
-                              // Connects the 2 diferent trees taking in notice the size of each tree
-                              if (sz[p] < sz[q])
-                              {
-                                    group[p] = q;
-                                    sz[q] += sz[p];
-                                    t = q;
-                              }
-                              else
-                              {
-                                    group[q] = p;
-                                    sz[p] += sz[q];
-                                    t = p;
-                              }
+                                    // Connects the 2 diferent trees taking in notice the size of each tree
+                                    if (sz[p] < sz[q])
+                                    {
+                                          group[p] = q;
+                                          sz[q] += sz[p];
+                                          t = q;
+                                    }
+                                    else
+                                    {
+                                          group[q] = p;
+                                          sz[p] += sz[q];
+                                          t = p;
+                                    }
 
-                              // Compresses the trees
-                              for (p = cell_index; p != group[p]; p = x)
-                              {
-                                    x = group[p];
-                                    group[p] = t;
-                              }
-                              for (q = front_cell_index; q != group[q]; q = x)
-                              {
-                                    x = group[q];
-                                    group[q] = t;
+                                    // Compresses the trees
+                                    for (p = cell_index; p != group[p]; p = x)
+                                    {
+                                          x = group[p];
+                                          group[p] = t;
+                                    }
+                                    for (q = front_cell_index; q != group[q]; q = x)
+                                    {
+                                          x = group[q];
+                                          group[q] = t;
+                                    }
                               }
                         }
                   }
@@ -133,33 +130,34 @@ int *CWQU2(int *matrix, int row, int column, int *group, int *sz)
                                     ;
 
                               // Compares 2 roots
-                              if (p == q)
-                                    continue;
+                              if (p != q)
+                              {
 
-                              // Connects the 2 diferent trees taking in notice the size of each tree
-                              if (sz[p] < sz[q])
-                              {
-                                    group[p] = q;
-                                    sz[q] += sz[p];
-                                    t = q;
-                              }
-                              else
-                              {
-                                    group[q] = p;
-                                    sz[p] += sz[q];
-                                    t = p;
-                              }
+                                    // Connects the 2 diferent trees taking in notice the size of each tree
+                                    if (sz[p] < sz[q])
+                                    {
+                                          group[p] = q;
+                                          sz[q] += sz[p];
+                                          t = q;
+                                    }
+                                    else
+                                    {
+                                          group[q] = p;
+                                          sz[p] += sz[q];
+                                          t = p;
+                                    }
 
-                              // Compresses the trees
-                              for (p = cell_index; p != group[p]; p = x)
-                              {
-                                    x = group[p];
-                                    group[p] = t;
-                              }
-                              for (q = under_cell_index; q != group[q]; q = x)
-                              {
-                                    x = group[q];
-                                    group[q] = t;
+                                    // Compresses the trees
+                                    for (p = cell_index; p != group[p]; p = x)
+                                    {
+                                          x = group[p];
+                                          group[p] = t;
+                                    }
+                                    for (q = under_cell_index; q != group[q]; q = x)
+                                    {
+                                          x = group[q];
+                                          group[q] = t;
+                                    }
                               }
                         }
                   }
@@ -199,4 +197,101 @@ int getRoot(int *group, int i)
             ;
 
       return p;
+}
+
+list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C)
+{
+      list **array = (list **)malloc(NumberOfRooms * sizeof(list *));
+
+      for (unsigned int i = 0; i < L; i++)
+      {
+            for (unsigned int j = 0; j < C; j++)
+            {
+                  if (is_cell_in_board(L, C, i, j + 2))
+                  {
+                        if (graph[i * C + j] != 0 && graph[i * C + j + 2])
+                              if (group[i * C + j] != group[i * C + j + 2]) // temos uma parede no meio
+                              {
+                                    array[group[i * C + j]] = updateListCost(array[group[i * C + j]], group[i * C + j + 2], graph[i * C + j + 1], i, j + 1);
+                                    array[group[i * C + j + 2]] = updateListCost(array[group[i * C + j + 2]], group[i * C + j], graph[i * C + j + 1], i, j + 1);
+                              }
+                  }
+                  if (is_cell_in_board(L, C, i + 2, j))
+                  {
+                        if (graph[i * C + j] == 0 && graph[(i + 2) * C + j])
+                              if (group[i * C + j] != group[(i + 2) * C + j]) // temos uma parede no meio
+                              {
+                                    array[group[i * C + j]] = updateListCost(array[group[i * C + j]], group[(i + 2) * C + j], graph[(i + 1) * C + j], i + 1, j);
+                                    array[group[(i + 2) * C + j]] = updateListCost(array[group[(i + 2) * C + j]], group[i * C + j], graph[(i + 1) * C + j], i + 1, j);
+                              }
+                  }
+            }
+      }
+      free(graph);
+      free(group);
+      return array;
+}
+
+list *updateListCost(list *array, int group, int cost, int i, int j)
+{
+      list *aux = array;
+      list *newNode = NULL;
+      if (aux != NULL)
+      {
+
+            while (aux != NULL)
+            {
+                  if (aux->vertice == group && cost > aux->cost)
+                  {
+                        aux->cost = cost;
+                        aux->vertice = group;
+                        aux->i = i;
+                        aux->j = j;
+                  }
+                  aux = aux->next;
+            }
+
+            if (aux == NULL) // não estavam ligados
+            {
+                  newNode = (list *)malloc(sizeof(list) * 1);
+                  if (newNode == NULL)
+                        exit(0);
+
+                  newNode->next = NULL;
+                  newNode->vertice = group;
+                  newNode->cost = cost;
+                  newNode->i = i;
+                  newNode->j = j;
+
+                  aux = array->next;
+                  array->next = newNode;
+                  newNode->next = aux;
+            }
+      }
+      else
+      {
+
+            array = (list *)malloc(1 * sizeof(list));
+            array->cost = cost;
+            array->vertice = group;
+            array->next = NULL;
+      }
+
+      return array;
+}
+
+void freeMatrix(list **array, int V)
+{
+      list *aux;
+      for (int i = 0; i < V; i++)
+      {
+            while (array[i] != NULL)
+            {
+                  aux = array[i];
+                  array[i] = aux->next;
+                  free(aux);
+            }
+      }
+      free(array);
+      return;
 }

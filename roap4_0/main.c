@@ -63,9 +63,11 @@ int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
     int L, C, V, i, j, P, treasure, W;
+    int NumberOfRooms = 0;
     int *walls = NULL;
     mode game_mode;
     _project project = FINAL;
+    list **head = NULL;
     FILE *fp;
     FILE *ofp;
     char *filename;
@@ -184,17 +186,6 @@ int main(int argc, char **argv)
 
             group = CWQU2(graph, L, C, group, sz);
 
-            /*
-            for (int k = 0; k < L; k++)
-            {
-                for (int l = 0; l < C; l++)
-                {
-                    printf("%d ", group[k * C + l]);
-                }
-                printf("\n");
-            }
-            printf("\n");*/
-
             sz = NULL; // No longer need to keep this array since i wont be neeging the size of the array
 
             if (same_root2(graph, group, 0, 0, i, j, C))
@@ -204,7 +195,13 @@ int main(int argc, char **argv)
                 continue;
             }
 
-            printf("%d \n\n", CRN(graph, L, C, group));
+            NumberOfRooms = CRN(graph, L, C, group);
+
+            treasure = group[i * C + j];
+
+            head = toSmallerMap(NumberOfRooms, group, graph, L, C);
+
+            //printf("%d \n\n", CRN(graph, L, C, group));
 
             graph[get_index(C, i1, j1)] = flag;
             if ((min_j >= j && j != 0) || (j == 0 && min_i > i))
@@ -213,20 +210,22 @@ int main(int argc, char **argv)
                 continue;
             }
 
-            int *dist = (int *)malloc(V * sizeof(int));
+            int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
                 exit(0);
 
-            int *parent = (int *)malloc(V * sizeof(int));
+            int *parent = (int *)malloc(NumberOfRooms * sizeof(int));
             if (parent == NULL)
                 exit(0);
 
-            bool *sptSet = (bool *)malloc(V * sizeof(bool));
+            bool *sptSet = (bool *)malloc(NumberOfRooms * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
             treasure = get_index(C, i, j);
 
-            djisktra(graph, L, C, dist, parent, sptSet, treasure);
+            djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
+
+            //djisktra(graph, L, C, dist, parent, sptSet, treasure);
 
             /*
             printf("%d %d\n", i, j);
@@ -259,10 +258,14 @@ int main(int argc, char **argv)
                 free(walls);
                 walls = NULL;
             }
-            free(graph);
             free(dist);
             free(parent);
             free(sptSet);
+            freeMatrix(head, NumberOfRooms);
+
+            dist = parent = NULL;
+            sptSet = NULL;
+            head = NULL;
         }
     }
 
