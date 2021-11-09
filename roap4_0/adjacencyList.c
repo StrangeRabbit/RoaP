@@ -273,12 +273,9 @@ list *updateListCost(list *array, int group, int cost, int i, int j)
                         aux->cost = cost;
                         aux->i = i;
                         aux->j = j;
-                        break;
                   }
-                  else if (aux->vertice == group && cost == aux->cost)
-                  {
-                        return array;
-                  }
+                  break;
+                  
             }
             aux = aux->next;
       }
