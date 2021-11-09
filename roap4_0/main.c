@@ -11,7 +11,8 @@
 
 #define MAX 100
 
-typedef struct _w{
+typedef struct _w
+{
     int i;
     int j;
     int cost;
@@ -24,7 +25,6 @@ int get_i(list *array, int v)
         array = array->next;
     }
     return array->i;
-    
 }
 
 int get_j(list *array, int v)
@@ -34,7 +34,6 @@ int get_j(list *array, int v)
         array = array->next;
     }
     return array->j;
-    
 }
 
 int get_c(list *array, int v)
@@ -44,13 +43,13 @@ int get_c(list *array, int v)
         array = array->next;
     }
     return array->cost;
-    
 }
 
 void print_walls(w *walls, FILE *fp, int P)
 {
     int i;
-    for(i = P - 1; i >= 0; i--){
+    for (i = P - 1; i >= 0; i--)
+    {
         fprintf(fp, "%d %d %d\n", walls[i].i + 1, walls[i].j + 1, walls[i].cost);
     }
     return;
@@ -58,8 +57,9 @@ void print_walls(w *walls, FILE *fp, int P)
 
 int count_walls(int *parent, int src)
 {
-    int wall = 0, i;
-    while(src != 0){
+    int wall = 0;
+    while (src != 0)
+    {
         wall++;
         src = parent[src];
     }
@@ -68,10 +68,10 @@ int count_walls(int *parent, int src)
 
 w *get_walls(int *parent, int src, int W, list **graph)
 {
-    w *walls = (w*) malloc(sizeof(w) * W);
-    int aux, wall = 0;
+    w *walls = (w *)malloc(sizeof(w) * W);
     int i = 0;
-    for(i = 0; i < W; i++, src = parent[src]){
+    for (i = 0; i < W; i++, src = parent[src])
+    {
         walls[i].i = get_i(graph[src], parent[src]);
         walls[i].j = get_j(graph[src], parent[src]);
         walls[i].cost = get_c(graph[src], parent[src]);
