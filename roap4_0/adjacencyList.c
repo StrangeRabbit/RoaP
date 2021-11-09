@@ -1,3 +1,4 @@
+#include "game_mode.h"
 #include "adjacencyList.h"
 #include <stdbool.h>
 #include <stdlib.h>
@@ -9,14 +10,35 @@
  * @param C
  * @return number of room 
  */
-int CRN(int *graph, int L, int C)
+int CRN(int *graph, int L, int C, int *group)
 {
-      int lastRoot = 0;
+      int lastRoot = -1;
+      int aux = 0;
+      int p = 0;
+
+      /*
+      for (int i = 0; i < L; i++)
+      {
+            for (int j = 0; j < C; j++)
+            {
+                  printf("%d ", group[i * C + j]);
+            }
+            printf("\n");
+      }*/
 
       for (int i = 0; i < L * C; i++)
       {
-            //if (graph)
+            if (graph[i] == 0)
+            {
+                  p = getRoot(group, i);
+                  if (p > lastRoot)
+                  {
+                        lastRoot = p;
+                        aux++;
+                  }
+            }
       }
+      return aux;
 }
 
 /**
@@ -25,27 +47,22 @@ int CRN(int *graph, int L, int C)
  * @param row number of row 
  * @param column number of colums 
  */
-void CWQU2(int *matrix, int row, int column)
+int *CWQU2(int *matrix, int row, int column, int *group, int *sz)
 {
       int i, j;
       int cell_index;
       int front_cell_index;
       int under_cell_index;
       int p, q, t, x;
-      int *group = NULL;
-      int *sz = NULL;
-
-      // Allocates the 2 arrays
-      group = (int *)malloc(row * column * sizeof(int));
-      sz = (int *)malloc(row * column * sizeof(int));
-
-      if (group == NULL || sz == NULL)
-            exit(0);
 
       for (i = 0; i < row * column; i++)
       {
-            group[i] = i;
-            sz[i] = 1;
+
+            if (matrix[i] == 0)
+            {
+                  sz[i] = 1;
+                  group[i] = i;
+            }
       }
 
       // Moves through the map
@@ -53,23 +70,22 @@ void CWQU2(int *matrix, int row, int column)
       {
             for (j = 0; j < column; j++)
             {
-                  cell_index = get_index(column, i, j);
-
+                  cell_index = i * column + j;
                   // Only check connects the cell if it is not a wall
-                  if (is_white(matrix[cell_index]) == false)
+                  if (id_white(matrix[cell_index]) == false)
                         continue;
                   // Only connects if the cell is in the board
                   if (is_cell_in_board(row, column, i, j + 1) == true)
                   {
-                        if (is_white(matrix[get_index(column, i, j + 1)]) == true)
+                        if (id_white(matrix[i * column + j + 1]) == true)
                         {
                               // Gets the index of the cell that has index +1
-                              front_cell_index = get_index(column, i, j + 1);
+                              front_cell_index = (i * column + j + 1);
 
                               //  Gets the 2 roots of the trees
                               for (p = cell_index; p != group[p]; p = group[p])
                                     ;
-                              for (q = front_cell_index; q != group[p]; q = group[q])
+                              for (q = front_cell_index; q != group[q]; q = group[q])
                                     ;
 
                               // Compares 2 roots
@@ -106,14 +122,14 @@ void CWQU2(int *matrix, int row, int column)
                   // only connecrs if cell with index + number of columns in the map && is white
                   if (is_cell_in_board(row, column, i + 1, j) == true)
                   {
-                        if (is_white(matrix[get_index(column, i + 1, j)]) == true)
+                        if (id_white(matrix[(i + 1) * column + j]) == true)
                         {
-                              under_cell_index = get_index(column, i + 1, j);
+                              under_cell_index = (i + 1) * column + j;
 
                               //  Gets the 2 roots of the trees
                               for (p = cell_index; p != group[p]; p = group[p])
                                     ;
-                              for (q = under_cell_index; q != group[1]; q = group[q])
+                              for (q = under_cell_index; q != group[q]; q = group[q])
                                     ;
 
                               // Compares 2 roots
@@ -149,4 +165,38 @@ void CWQU2(int *matrix, int row, int column)
                   }
             }
       }
+      free(sz);
+      return group;
+}
+
+bool id_white(int aux)
+{
+      if (aux == 0)
+            return true;
+      return false;
+}
+
+int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int column)
+{
+      int p = i1 * column + j1;
+      int q = i2 * column + j2; // Gets two roots of the tree
+
+      p = getRoot(group, p);
+      q = getRoot(group, q);
+
+      // Checks the roots
+      if (p == q)
+            return 1;
+      else
+            return 0;
+}
+
+int getRoot(int *group, int i)
+{
+      int p;
+
+      for (p = i; p != group[p]; p = group[p])
+            ;
+
+      return p;
 }

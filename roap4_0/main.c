@@ -7,6 +7,7 @@
 #include "game_mode.h"
 #include "structures.h"
 #include "djisktra.h"
+#include "adjacencyList.h"
 
 #define MAX 100
 
@@ -60,7 +61,7 @@ int *get_walls(int *parent, int src, int W, int C)
  */
 int main(int argc, char **argv)
 {
-    int i1 = 0, j1 = 0, i2 = 0, j2 = 0, success = 0;
+    int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
     int L, C, V, i, j, P, treasure, W;
     int *walls = NULL;
     mode game_mode;
@@ -72,6 +73,8 @@ int main(int argc, char **argv)
     char output_filename[MAX];
     cell *matrix;
     int *graph;
+    int *group;
+    int *sz;
     if (argc == 3)
     {
         project = INTERMEDIO;
@@ -152,7 +155,7 @@ int main(int argc, char **argv)
             if (treasure_is_adjacent_to_src(i, j))
             {
                 jump_map(fp, P);
-                fprintf(ofp, "%d\n\n", 0);
+                fprintf(ofp, "%d\n\n", (0));
                 continue;
             }
 
@@ -170,15 +173,38 @@ int main(int argc, char **argv)
             min_j = j1;
             min_i = INT_MAX;
             graph = build_graph(fp, C, V, P - 1, &min_j, &min_i);
+            graph[i1 * C + j1] = flag; // Add value to the map
 
-            CWQU(graph, L, C);
+            // Alocate array that will be used in CWQU
+            group = (int *)malloc(L * C * sizeof(int));
+            sz = (int *)malloc(L * C * sizeof(int));
 
-            if (same_root(graph, C, L, 0, 0, i, j))
+            if (group == NULL || sz == NULL)
+                exit(0);
+
+            group = CWQU2(graph, L, C, group, sz);
+
+            /*
+            for (int k = 0; k < L; k++)
+            {
+                for (int l = 0; l < C; l++)
+                {
+                    printf("%d ", group[k * C + l]);
+                }
+                printf("\n");
+            }
+            printf("\n");*/
+
+            sz = NULL; // No longer need to keep this array since i wont be neeging the size of the array
+
+            if (same_root2(graph, group, 0, 0, i, j, C))
             {
                 fprintf(ofp, "%d\n", 0); // Estão na mesma sala
                 free(graph);
                 continue;
             }
+
+            printf("%d \n\n", CRN(graph, L, C, group));
 
             graph[get_index(C, i1, j1)] = flag;
             if ((min_j >= j && j != 0) || (j == 0 && min_i > i))

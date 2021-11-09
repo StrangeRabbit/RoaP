@@ -3,19 +3,20 @@ PROJECT_NAME = roap #target file name
 CC = gcc #compiler
 CFLAGS = -Wall -std=c99 -g
 
-OBJECTS = main.o input.o output.o game_mode.o djisktra.o heap.o #objects
+OBJECTS = main.o input.o output.o game_mode.o djisktra.o heap.o adjacencyList.o #objects
 
 all: $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(PROJECT_NAME)
 
-main.o: main.c structures.h
+main.o: main.c structures.h adjacencyList.h
 input.o: input.c input.h
 output.o: output.c output.h
 game_mode.o: game_mode.c game_mode.h
 djisktra.o: djisktra.c djisktra.h input.h game_mode.h
 heap.o: heap.c heap.h 
+adjacencyList.o : adjacencyList.c adjacencyList.h
 
 FILES_1=$(shell ls ../Bilhar_Pequeno/*.in)
 FILES_2=$(shell ls ../Chess_Party/*.in)

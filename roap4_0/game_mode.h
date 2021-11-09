@@ -1,4 +1,5 @@
 #include "structures.h"
+#include <stdio.h>
 #include "stdbool.h"
 
 #ifndef __GAME_MODE__
