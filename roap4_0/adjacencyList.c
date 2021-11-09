@@ -13,26 +13,59 @@
 int CRN(int *graph, int L, int C, int *group)
 {
       int lastOldRoot = 0;
-      int newRoot = -1;
+      int newRoot = 0;
       int p = 0;
+
+      for (int i = 0; i < L; i++)
+      {
+            for (int j = 0; j < C; j++)
+            {
+                  printf("%6d ", graph[i * C + j]);
+            }
+            printf("\n");
+      }
+      printf("\n");
 
       for (unsigned int i = 0; i < L * C; i++)
       {
-            p = getRoot(group, i);
-            if (lastOldRoot < p)
+            if (id_white(graph[i]))
             {
-                  newRoot += 1;
-                  group[i] = newRoot;
-                  lastOldRoot = p;
-                  for (unsigned int j = i; j < L * C; j++)
+                  p = getRoot(group, i);
+                  if (lastOldRoot < p)
                   {
-                        if (group[j] == p)
-                              group[j] = newRoot;
+                        newRoot += 1;
+                        lastOldRoot = p;
+                        printf("%d %d\n", newRoot, lastOldRoot);
+                        for (unsigned int j = i; j < L * C; j++)
+                        {
+                              if (group[j] == p)
+                                    group[j] = newRoot;
+                        }
                   }
             }
       }
-
-      return newRoot;
+      /*
+      for (int i = 0; i < L; i++)
+      {
+            for (int j = 0; j < C; j++)
+            {
+                  printf("%6d ", group[i * C + j]);
+            }
+            printf("\n");
+      }
+      printf("\n");
+      
+      for (int i = 0; i < L; i++)
+      {
+            for (int j = 0; j < C; j++)
+            {
+                  printf("%6d ", group[i * C + j]);
+            }
+            printf("\n");
+      }
+      printf("\n");
+*/
+      return ++newRoot;
 }
 
 /**
@@ -192,7 +225,8 @@ int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int colu
 int getRoot(int *group, int i)
 {
       int p;
-
+      if (i == -1)
+            return -1;
       for (p = i; p != group[p]; p = group[p])
             ;
 
@@ -202,6 +236,8 @@ int getRoot(int *group, int i)
 list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C)
 {
       list **array = (list **)malloc(NumberOfRooms * sizeof(list *));
+      for (unsigned int i = 0; i < NumberOfRooms; i++)
+            array[i] = NULL;
 
       for (unsigned int i = 0; i < L; i++)
       {
@@ -209,7 +245,7 @@ list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C)
             {
                   if (is_cell_in_board(L, C, i, j + 2))
                   {
-                        if (graph[i * C + j] != 0 && graph[i * C + j + 2])
+                        if (graph[i * C + j] == 0 && graph[i * C + j + 2] == 0 && graph[i * C + j + 1] != -1)
                               if (group[i * C + j] != group[i * C + j + 2]) // temos uma parede no meio
                               {
                                     array[group[i * C + j]] = updateListCost(array[group[i * C + j]], group[i * C + j + 2], graph[i * C + j + 1], i, j + 1);
@@ -218,7 +254,7 @@ list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C)
                   }
                   if (is_cell_in_board(L, C, i + 2, j))
                   {
-                        if (graph[i * C + j] == 0 && graph[(i + 2) * C + j])
+                        if (graph[i * C + j] == 0 && graph[(i + 2) * C + j] == 0 && graph[(i + 1) * C + j] != -1)
                               if (group[i * C + j] != group[(i + 2) * C + j]) // temos uma parede no meio
                               {
                                     array[group[i * C + j]] = updateListCost(array[group[i * C + j]], group[(i + 2) * C + j], graph[(i + 1) * C + j], i + 1, j);
@@ -236,62 +272,69 @@ list *updateListCost(list *array, int group, int cost, int i, int j)
 {
       list *aux = array;
       list *newNode = NULL;
-      if (aux != NULL)
+
+      while (aux != NULL)
       {
-
-            while (aux != NULL)
+            if (aux->vertice == group && cost < aux->cost)
             {
-                  if (aux->vertice == group && cost > aux->cost)
-                  {
-                        aux->cost = cost;
-                        aux->vertice = group;
-                        aux->i = i;
-                        aux->j = j;
-                  }
-                  aux = aux->next;
+                  aux->cost = cost;
+                  aux->vertice = group;
+                  aux->i = i;
+                  aux->j = j;
+                  break;
             }
-
-            if (aux == NULL) // não estavam ligados
+            else if (aux->vertice == group && cost == aux->cost)
             {
-                  newNode = (list *)malloc(sizeof(list) * 1);
-                  if (newNode == NULL)
-                        exit(0);
-
-                  newNode->next = NULL;
-                  newNode->vertice = group;
-                  newNode->cost = cost;
-                  newNode->i = i;
-                  newNode->j = j;
-
-                  aux = array->next;
-                  array->next = newNode;
-                  newNode->next = aux;
+                  return array;
             }
+            aux = aux->next;
       }
-      else
+      if (aux == NULL)
       {
-
-            array = (list *)malloc(1 * sizeof(list));
-            array->cost = cost;
-            array->vertice = group;
-            array->next = NULL;
+            newNode = (list *)malloc(1 * sizeof(list));
+            if (newNode == NULL)
+                  exit(0);
+            newNode->cost = cost;
+            newNode->vertice = group;
+            newNode->i = i;
+            newNode->j = j;
+            newNode->next = array;
+            array = newNode;
       }
-
       return array;
 }
 
 void freeMatrix(list **array, int V)
 {
       list *aux;
-      for (int i = 0; i < V; i++)
+      if (array != NULL)
       {
-            while (array[i] != NULL)
+            for (int i = 0; i < V; i++)
             {
-                  aux = array[i];
-                  array[i] = aux->next;
-                  free(aux);
+                  while (array[i] != NULL)
+                  {
+                        aux = array[i];
+                        array[i] = aux->next;
+                        free(aux);
+                  }
             }
+            free(array);
       }
-      free(array);
       return;
+}
+
+void printFullList(list **array, int V)
+{
+      list *aux = NULL;
+      if (array != NULL)
+            for (int i = 0; i < V; i++)
+            {
+                  printf("%d:  ", i);
+                  for (aux = array[i]; aux != NULL; aux = aux->next)
+                  {
+                        printf("%d:%d   ", aux->vertice,
+                               aux->cost);
+                  }
+                  printf("\n\n");
+            }
 }

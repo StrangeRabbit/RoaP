@@ -62,7 +62,7 @@ int *get_walls(int *parent, int src, int W, int C)
 int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
-    int L, C, V, i, j, P, treasure, W;
+    int L, C, V, i, j, P, treasure;
     int NumberOfRooms = 0;
     int *walls = NULL;
     mode game_mode;
@@ -201,15 +201,6 @@ int main(int argc, char **argv)
 
             head = toSmallerMap(NumberOfRooms, group, graph, L, C);
 
-            //printf("%d \n\n", CRN(graph, L, C, group));
-
-            graph[get_index(C, i1, j1)] = flag;
-            if ((min_j >= j && j != 0) || (j == 0 && min_i > i))
-            {
-                fprintf(ofp, "%d\n\n", 0);
-                continue;
-            }
-
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
                 exit(0);
@@ -221,9 +212,12 @@ int main(int argc, char **argv)
             bool *sptSet = (bool *)malloc(NumberOfRooms * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
+
             treasure = get_index(C, i, j);
 
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
+
+            printFullList(head, NumberOfRooms);
 
             //djisktra(graph, L, C, dist, parent, sptSet, treasure);
 
@@ -233,7 +227,7 @@ int main(int argc, char **argv)
             for(i1 = 0; i1 < V; i1++)
                 printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
             printf("\n\n");
-            */
+            
             switch (dist[treasure])
             {
             case INT_MAX:
@@ -252,7 +246,7 @@ int main(int argc, char **argv)
                 print_walls(W, treasure, walls, graph, ofp, C);
                 fprintf(ofp, "\n");
                 break;
-            }
+            } */
             if (walls != NULL)
             {
                 free(walls);

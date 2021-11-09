@@ -18,5 +18,6 @@ int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int colu
 list *updateListCost(list *array, int group, int cost, int i, int j);
 list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C);
 void freeMatrix(list **array, int V);
+void printFullList(list **array, int V);
 
 #endif
