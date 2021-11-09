@@ -60,9 +60,9 @@ int j_idx(int idx, int C)
     return idx % C;
 }
 
-void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, int src)
+void djisktra(int **graph, int room1, int room2, int* dist, int *parent, bool *sptSet, int V)
 {
-    int V = L * C;
+    int V;
     unsigned int i, j, v;
     int u;
     int *heap;
@@ -78,21 +78,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     sptSet[0] = true;
     parent[0] = 0;
 
-    connected = connect_2v(dist, parent, sptSet, graph, 0, C, C, L);
-    if(connected == 1){
-        if(graph[C] == 0)
-            push(C, dist, heap, hsize, &lfree);
-        else
-            push(2 * C, dist, heap, hsize, &lfree);
-        
-    }
-    connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C, L);
-    if(connected == 1){
-        if(graph[1] == 0)
-            push(1, dist, heap, hsize, &lfree);
-        else
-            push(2, dist, heap, hsize, &lfree);
-    }
+    
     
     while(lfree > 0){
         /*
