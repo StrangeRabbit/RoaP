@@ -7,7 +7,7 @@
 #include "input.h"
 #include "game_mode.h"
 #include "heap.h"
-#include "adjacencyList.h"
+
 
 void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *heap, int hsize, int *lfree)
 {
