@@ -15,7 +15,7 @@ int CRN(int *graph, int L, int C, int *group)
       int lastOldRoot = 0;
       int newRoot = 0;
       int p = 0;
-
+      /*
       for (int i = 0; i < L; i++)
       {
             for (int j = 0; j < C; j++)
@@ -24,7 +24,7 @@ int CRN(int *graph, int L, int C, int *group)
             }
             printf("\n");
       }
-      printf("\n");
+      printf("\n");*/
 
       for (unsigned int i = 0; i < L * C; i++)
       {
@@ -35,7 +35,7 @@ int CRN(int *graph, int L, int C, int *group)
                   {
                         newRoot += 1;
                         lastOldRoot = p;
-                        printf("%d %d\n", newRoot, lastOldRoot);
+                        //printf("%d %d\n", newRoot, lastOldRoot);
                         for (unsigned int j = i; j < L * C; j++)
                         {
                               if (group[j] == p)
@@ -54,16 +54,7 @@ int CRN(int *graph, int L, int C, int *group)
             printf("\n");
       }
       printf("\n");
-      
-      for (int i = 0; i < L; i++)
-      {
-            for (int j = 0; j < C; j++)
-            {
-                  printf("%6d ", group[i * C + j]);
-            }
-            printf("\n");
-      }
-      printf("\n");
+
 */
       return ++newRoot;
 }
@@ -275,17 +266,19 @@ list *updateListCost(list *array, int group, int cost, int i, int j)
 
       while (aux != NULL)
       {
-            if (aux->vertice == group && cost < aux->cost)
+            if (aux->vertice == group)
             {
-                  aux->cost = cost;
-                  aux->vertice = group;
-                  aux->i = i;
-                  aux->j = j;
-                  break;
-            }
-            else if (aux->vertice == group && cost == aux->cost)
-            {
-                  return array;
+                  if (cost < aux->cost)
+                  {
+                        aux->cost = cost;
+                        aux->i = i;
+                        aux->j = j;
+                        break;
+                  }
+                  else if (aux->vertice == group && cost == aux->cost)
+                  {
+                        return array;
+                  }
             }
             aux = aux->next;
       }
