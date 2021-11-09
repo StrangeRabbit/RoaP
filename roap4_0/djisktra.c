@@ -57,7 +57,6 @@ void djisktra(list **graph, int room2, int* dist, int *parent, bool *sptSet, int
     int u;
     int *heap;
     int hsize, lfree;
-    int connected, pos, idx;
     hinit(V, &heap, &hsize, &lfree);
     
     for(v = 0; v < V; v++){
