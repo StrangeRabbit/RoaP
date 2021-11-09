@@ -7,47 +7,38 @@
 #include "input.h"
 #include "game_mode.h"
 #include "heap.h"
+#include "adjacencyList.h"
 
-int connect_2v(int *dist, int *parent, bool *sptSet, int *graph, int v1, int v2, int C, int L)
+void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *heap, int hsize, int *lfree)
 {
-    int aux = v2 + v2 - v1;
-    int flag = 0;
-    int i1 = i_idx(v1, C), j1 = j_idx(v1, C), i2 = i_idx(v2, C), j2 = j_idx(v2, C), i_aux = i_idx(aux, C), j_aux = j_idx(aux, C);
-    if((graph[v2] == 0) && (dist[v2] > dist[v1]) && (sptSet[v2] == false)){
-        
-        if(!(i1 != i2 && j1 != j2)){
-            parent[v2] = v1;
-            if(dist[v2] == INT_MAX) flag = 1;
-            else flag = 2;
-            dist[v2] = dist[v1];
+    list *aux;
+    int flag, pos;
+    /* init aux to first position of the list of the vertice */
+    aux = graph[room];
+    /* update all vertices of the list */
+    while(aux != NULL){
+        /* flag says if the vertice was added (-1) , updated (2) or nothing (1) to the heap */
+        flag = -1;
+        /* check if the vertice is already in the heap */
+        if(dist[aux->vertice] != INT_MAX)
+            flag = 1;
+        /* if vertice has not the shortest path update it */
+        if(sptSet[aux->vertice] == false && (dist[room] + aux->cost < dist[aux->vertice])){
+            parent[aux->vertice] = room;
+            dist[aux->vertice] = dist[room] + aux->cost;
+            if(flag == 1) flag = 2;
         }
-    }
-    if(is_cell_in_board(L, C, i_aux, j_aux)){
-        if((graph[v2] > 0) && (graph[aux] == 0) && (dist[aux] > dist[v1] + graph[v2]) && (sptSet[aux] == false)){
-            if(!(i1 != i_aux && j1 != j_aux)){
-                parent[aux] = v1;
-                if(dist[aux] == INT_MAX) flag = 1;
-                else flag = 2;
-                dist[aux] = dist[v1] + graph[v2];
-            }
+        /* if vertice isnt in the heap, add it */
+        if(flag == -1)
+            push(aux->vertice, dist, heap, hsize, lfree);
+        /* if dist of vertice has been updated, fix it up in the heap */
+        else if(flag == 2){
+            pos = get_pos(heap, aux->vertice, *lfree);
+            FixUp(heap, pos, dist);
         }
+        /* go next vertice of the list */
+        aux = aux->next;
     }
-    return flag;
-}
-
-int minDistance(int V, int *dist, bool *sptSet)
-{
-    int min = INT_MAX, min_index = -1;
-    unsigned int v;
-
-    for(v = 0; v < V; v++){
-        if(sptSet[v] == false && dist[v] < min){
-            min = dist[v]; 
-            min_index = v;
-        }
-    }
-    
-    return min_index;
 }
 
 int i_idx(int idx, int C)
@@ -60,16 +51,15 @@ int j_idx(int idx, int C)
     return idx % C;
 }
 
-void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, int src)
+void djisktra(list **graph, int room2, int* dist, int *parent, bool *sptSet, int V)
 {
-    int V = L * C;
     unsigned int i, j, v;
     int u;
     int *heap;
     int hsize, lfree;
     int connected, pos, idx;
     hinit(V, &heap, &hsize, &lfree);
-
+    
     for(v = 0; v < V; v++){
         dist[v] = INT_MAX;
         sptSet[v] = false;
@@ -77,22 +67,8 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
     dist[0] = 0;
     sptSet[0] = true;
     parent[0] = 0;
-
-    connected = connect_2v(dist, parent, sptSet, graph, 0, C, C, L);
-    if(connected == 1){
-        if(graph[C] == 0)
-            push(C, dist, heap, hsize, &lfree);
-        else
-            push(2 * C, dist, heap, hsize, &lfree);
-        
-    }
-    connected = connect_2v(dist, parent, sptSet, graph, 0, 1, C, L);
-    if(connected == 1){
-        if(graph[1] == 0)
-            push(1, dist, heap, hsize, &lfree);
-        else
-            push(2, dist, heap, hsize, &lfree);
-    }
+    /* connect the paths of vertice 0 */
+    connect(dist, parent, sptSet, graph, 0, heap, hsize, &lfree);
     
     while(lfree > 0){
         /*
@@ -102,6 +78,7 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         }
         printf("\n");
         */
+       /* pop the shortest path */
         u = pop(heap, dist, &lfree);
         /*
         //printf("u: %d\n", u);
@@ -111,73 +88,13 @@ void djisktra(int *graph, int L, int C, int* dist, int *parent, bool *sptSet, in
         }
         printf("\n");
         */
-        i = i_idx(u, C);
-        j = j_idx(u, C);
         //printf("%d %d\n\n\n", i, j);
+        /* put it in the tree */
         sptSet[u] = true;
-
-        if(u == src) break;
-
-        if(is_cell_in_board(L, C, i, j - 1)){
-            idx = get_index(C, i, j - 1);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
-            //printf("\n\n1 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - 1, dist[idx - 1]);
-            if(connected == 1){
-                if(graph[idx] != 0) idx--;
-                push(idx, dist, heap, hsize, &lfree);
-            }
-            else if(connected == 2){
-                if(graph[idx] != 0) idx--;
-                pos = get_pos(heap, idx, lfree);
-                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
-                FixUp(heap, pos, dist);
-            }
-        }
-        if(is_cell_in_board(L, C, i, j + 1)){
-            idx = get_index(C, i, j + 1);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
-            //printf("2 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + 1, dist[idx + 1]);
-            if(connected == 1){
-                if(graph[idx] != 0) idx++;
-                push(idx, dist, heap, hsize, &lfree);
-            }
-            else if(connected == 2){
-                if(graph[idx] != 0) idx++;
-                pos = get_pos(heap, idx, lfree);
-                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
-                FixUp(heap, pos, dist);
-            }
-        }
-        if(is_cell_in_board(L, C, i - 1, j)){
-            idx = get_index(C, i - 1, j);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
-            //printf("3 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx - C, dist[idx - C]);
-            if(connected == 1){
-                if(graph[idx] != 0) idx -= C;
-                push(idx, dist, heap, hsize, &lfree);
-            }
-            else if(connected == 2){
-                if(graph[idx] != 0) idx -= C;
-                pos = get_pos(heap, idx, lfree);
-                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
-                FixUp(heap, pos, dist);
-            }
-        }
-        if(is_cell_in_board(L, C, i + 1, j)){
-            idx = get_index(C, i + 1, j);
-            connected = connect_2v(dist, parent, sptSet, graph, u, idx, C, L);
-            //printf("4 -- %d -- %d\n %d -- %d\n\n\n", idx, dist[idx], idx + C, dist[idx + C]);
-            if(connected == 1){
-                if(graph[idx] != 0) idx += C;
-                push(idx, dist, heap, hsize, &lfree);
-            }
-            else if(connected == 2){
-                if(graph[idx] != 0) idx += C;
-                pos = get_pos(heap, idx, lfree);
-                //printf("%d\n%d -- %d\n\n", idx, pos, dist[pos]);
-                FixUp(heap, pos, dist);
-            }
-        }
+        /* if we reach the treasure, stop */
+        if(u == room2) break;
+        /* connect or update next vertices */
+        connect(dist, parent, sptSet, graph, u, heap, hsize, &lfree);
         /*
         for(int w = 0; w < lfree; w++)
         {
