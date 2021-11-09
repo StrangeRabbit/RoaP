@@ -11,44 +11,70 @@
 
 #define MAX 100
 
-void print_walls(int P, int src, int *walls, int *graph, FILE *fp, int C)
+typedef struct _w{
+    int i;
+    int j;
+    int cost;
+} w;
+
+int get_i(list *array, int v)
+{
+    while (array->vertice != v)
+    {
+        array = array->next;
+    }
+    return array->i;
+    
+}
+
+int get_j(list *array, int v)
+{
+    while (array->vertice != v)
+    {
+        array = array->next;
+    }
+    return array->j;
+    
+}
+
+int get_c(list *array, int v)
+{
+    while (array->vertice != v)
+    {
+        array = array->next;
+    }
+    return array->cost;
+    
+}
+
+void print_walls(w *walls, FILE *fp, int P)
 {
     int i;
-    for (i = P - 1; i >= 0; i--)
-    {
-        fprintf(fp, "%d %d %d\n", i_idx(walls[i], C) + 1, j_idx(walls[i], C) + 1, graph[walls[i]]);
+    for(i = P - 1; i >= 0; i--){
+        fprintf(fp, "%d %d %d\n", walls[i].i + 1, walls[i].j + 1, walls[i].cost);
     }
     return;
 }
 
-int count_walls(int *parent, int src, int C)
+int count_walls(int *parent, int src)
 {
-    int aux, wall = 0;
-    while (src != 0)
-    {
-        aux = parent[src] - src;
-        if (aux != 1 && aux != -1 && aux != C && aux != -C)
-            wall++;
+    int wall = 0, i;
+    while(src != 0){
+        wall++;
         src = parent[src];
     }
     return wall;
 }
 
-int *get_walls(int *parent, int src, int W, int C)
+w *get_walls(int *parent, int src, int W, list **graph)
 {
-    int *walls = (int *)malloc(sizeof(int) * W);
+    w *walls = (w*) malloc(sizeof(w) * W);
     int aux, wall = 0;
     int i = 0;
-    while (src != 0)
-    {
-        aux = parent[src] - src;
-        if (aux != 1 && aux != -1 && aux != C && aux != -C)
-        {
-            wall = src + aux / 2;
-            walls[i] = wall;
-            i++;
-        }
-        src = parent[src];
+    for(i = 0; i < W; i++, src = parent[src]){
+        walls[i].i = get_i(graph[src], parent[src]);
+        walls[i].j = get_j(graph[src], parent[src]);
+        walls[i].cost = get_c(graph[src], parent[src]);
     }
     return walls;
 }
@@ -64,7 +90,7 @@ int main(int argc, char **argv)
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
     int L, C, V, i, j, P, treasure;
     int NumberOfRooms = 0;
-    int *walls = NULL;
+    w *walls = NULL;
     mode game_mode;
     _project project = FINAL;
     list **head = NULL;
@@ -240,10 +266,10 @@ int main(int argc, char **argv)
 
             default:
                 fprintf(ofp, "%d\n", dist[treasure]);
-                W = count_walls(parent, treasure, C);
+                W = count_walls(parent, treasure);
                 fprintf(ofp, "%d\n", W);
-                walls = get_walls(parent, treasure, W, C);
-                print_walls(W, treasure, walls, graph, ofp, C);
+                walls = get_walls(parent, treasure, W, head);
+                print_walls(W, ofp, P);
                 fprintf(ofp, "\n");
                 break;
             } */
