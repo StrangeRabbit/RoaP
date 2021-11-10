@@ -210,9 +210,9 @@ int main(int argc, char **argv)
 
             NumberOfRooms = CRN(graph, L, C, group);
 
-            treasure = group[i * C + j];
-
             head = toSmallerMap(NumberOfRooms, group, graph, L, C);
+
+            treasure = group[i * C + j];
 
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
             if (sptSet == NULL)
                 exit(0);
 
-            treasure = get_index(C, i, j);
+            //treasure = get_index(C, i, j);
 
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
             
