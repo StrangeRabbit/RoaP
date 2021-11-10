@@ -27,8 +27,10 @@ int CRN(int *graph, int L, int C, int *group)
       }
       printf("\n");
 */
-      for (unsigned int i = 0; i < L * C; i++)
+      int V = L * C;
+      for (unsigned int i = 0; i < V; i++)
       {
+            //printf("i: %d\n\n", i);
             if (id_white(graph[i]))
             {
                   p = getRoot(group, i);
@@ -38,19 +40,20 @@ int CRN(int *graph, int L, int C, int *group)
                         lastOldRoot = p;
                         aux = 0;
                         //printf("%d %d\n", newRoot, lastOldRoot);
-                        for (unsigned int j = i; j < L * C; j++, aux++)
+                        for (unsigned int j = i; j < V; j++, aux++)
                         {
+                              if(aux == C) break;
                               if(j % C == 0) aux = 0;
                               if (group[j] == p){
                                     group[j] = newRoot;
                                     aux = 0;
                               }
-                              if(aux == C) break;
 
                         }
                   }
             }
       }
+      //printf("out for\n\n");
 /*
       for (int i = 0; i < L; i++)
       {
