@@ -15,7 +15,7 @@ int CRN(int *graph, int L, int C, int *group)
       int lastOldRoot = 0;
       int newRoot = 0;
       int p = 0;
-      int aux;
+      int flag;
       /*
       for (int i = 0; i < L; i++)
       {
@@ -39,19 +39,18 @@ int CRN(int *graph, int L, int C, int *group)
                   {
                         newRoot += 1;
                         lastOldRoot = p;
-                        aux = 0;
+                        flag = 1;
                         //printf("%d %d\n", newRoot, lastOldRoot);
                         for (unsigned int j = i; j < V; j++)
                         {
-                              ++aux;
-                              if (aux == C + 1)
-                                    break;
-                              if (j % C == 0)
-                                    aux = 0;
                               if (group[j] == p)
                               {
                                     group[j] = newRoot;
-                                    aux = 0;
+                                    flag = 0;
+                              }
+                              if(j % C == 0){
+                                    if(flag) break;
+                                    flag = 1;
                               }
                         }
                   }

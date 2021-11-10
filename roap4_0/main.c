@@ -201,34 +201,34 @@ int main(int argc, char **argv)
 
             if (group == NULL || sz == NULL)
                 exit(0);
-            printf("CWQU:  \n");
+            
             group = CWQU2(graph, L, C, group, sz);
-            printf("out\n\n");
+            
             sz = NULL; // No longer need to keep this array since i wont be neeging the size of the array
 
             if (same_root2(graph, group, 0, 0, i, j, C, L))
             {
-                fprintf(ofp, "%d\n", 0); // Estão na mesma sala
+                fprintf(ofp, "%d\n\n", 0); // Estão na mesma sala
                 free(group);
                 free(graph);
                 continue;
             }
-            printf("CRN:  \n");
+            
             NumberOfRooms = CRN(graph, L, C, group);
-            printf("out\n\n");
-
+            
+            /*
             for(i1 = 0; i1 < V; i1++)
             {
                 if(i1 % C == 0) printf("\n");
-                printf("%3d  ", group[i]);
+                printf("%3d  ", group[i1]);
             }
             printf("\n\n\n");
-
+            */
             treasure = group[i * C + j];
             //printf("%d\n", group[treasure]);
-            printf("Compress:  \n");
+            
             head = toSmallerMap(NumberOfRooms, group, graph, L, C);
-            printf("out\n\n");
+            
             //treasure = get_index(C, i, j);
 
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
@@ -242,9 +242,9 @@ int main(int argc, char **argv)
             bool *sptSet = (bool *)malloc(NumberOfRooms * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
-            printf("djikstra:  \n");
+            
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
-            printf("out\n\n");
+            
             //printFullList(head, NumberOfRooms);
 
             //djisktra(graph, L, C, dist, parent, sptSet, treasure);
