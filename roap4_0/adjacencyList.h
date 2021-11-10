@@ -20,6 +20,6 @@ list *updateListCost(list *array, int group, int cost, int i, int j);
 
 bool id_white(int aux);
 
-void printFullList(list **array, int V);
+void freeMatrix(list **array, int V);
 
 #endif
