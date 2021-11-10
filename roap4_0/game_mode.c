@@ -424,35 +424,3 @@ bool treasure_is_adjacent_to_src(int i, int j)
         return true;
     return false;
 }
-/*
-bool can_get_out(int r1, int r2, int d1, int d2)
-{
-    if(r1 == -1 && r2 == -1) return false;
-    if(r1 == 1 && r2 != 0 && d1 == 1 && d2 != 0) return false;
-    if(r1 == -1 && d1 == 1 && d2 != 0) return false;
-    if(r1 == 1 && r2 != 0 && d1 == -1) return false;
-    return true;
-}
-
-bool reachable(int r1, int r2, int u1, int u2, int l1, int l2, int d1, int d2)
-{
-    if(r1 == -1 && l1 == -1 && u1 == -1 && d1 == -1) return false;
-    if(r1 == -1 && l1 == -1 && u1 == -1 && d1 == 1 && d2 != 0) return false;
-    if(r1 == -1 && l1 == -1 && u1 == 1 && d1 == -1 && u2 != 0) return false;
-    if(r1 == -1 && l1 == 1 && u1 == -1 && d1 == -1 && l2 != 0) return false;
-    if(r1 == 1 && l1 == -1 && u1 == -1 && d1 == -1 && r2 != 0) return false;
-    if(r1 == 1 && l1 == 1 && u1 == -1 && d1 == -1 && r2 != 0 && l2 != 0) return false;
-    if(r1 == 1 && l1 == -1 && u1 == 1 && d1 == -1 && r2 != 0 && u2 != 0) return false;
-    if(r1 == 1 && l1 == -1 && u1 == -1 && d1 == 1 && r2 != 0 && d2 != 0) return false;
-    if(r1 == -1 && l1 == 1 && u1 == 1 && d1 == -1 && l2 != 0 && u2 != 0) return false;
-    if(r1 == -1 && l1 == 1 && u1 == -1 && d1 == 1 && l2 != 0 && d2 != 0) return false;
-    if(r1 == -1 && l1 == -1 && u1 == 1 && d1 == 1 && u2 != 0 && d2 != 0) return false;
-    if(r1 == 1 && l1 == 1 && u1 == 1 && d1 == -1 && r2 != 0 && l2 != 0 && u2 != 0) return false;
-    if(r1 == 1 && l1 == 1 && u1 == -1 && d1 == 1 && r2 != 0 && l2 != 0 && d2 != 0) return false;
-    if(r1 == 1 && l1 == -1 && u1 == 1 && d1 == 1 && r2 != 0 && u2 != 0 && d2 != 0) return false;
-    if(r1 == -1 && l1 == 1 && u1 == 1 && d1 == 1 && l2 != 0 && u2 != 0 && d2 != 0) return false;
-    if(r1 == 1 && l1 == 1 && u1 == 1 && d1 == 1 && r2 != 0 && l2 != 0 && u2 != 0 && d2 != 0) return false;
-    return true;
-}
-*/
-// Verifica se a src é saivel

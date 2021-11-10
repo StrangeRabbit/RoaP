@@ -172,8 +172,10 @@ int main(int argc, char **argv)
         }
         else
         {
+            // Gets header of the final game mode
             get_header_final(fp, &i, &j, &P);
             V = L * C;
+            // Initial check to see if we can jump map
             if (is_cell_in_board(L, C, i, j) == false)
             {
                 jump_map(fp, P);
@@ -187,7 +189,10 @@ int main(int argc, char **argv)
                 continue;
             }
 
+            // Build the graph
             graph = build_graph(fp, C, V, P, &min_j, &min_i);
+
+            // Check if djisktra is needed to solve the map or not
             if (graph[i * C + j] != 0 || graph[0])
             {
                 free(graph);
@@ -201,36 +206,27 @@ int main(int argc, char **argv)
 
             if (group == NULL || sz == NULL)
                 exit(0);
-            
-            group = CWQU2(graph, L, C, group, sz);
-            
-            sz = NULL; // No longer need to keep this array since i wont be neeging the size of the array
 
+            // Compresses and check if vertices are onf the same room
+            group = CWQU2(graph, L, C, group, sz);
             if (same_root2(graph, group, 0, 0, i, j, C, L))
             {
-                fprintf(ofp, "%d\n\n", 0); // Estão na mesma sala
+                fprintf(ofp, "%d\n\n", 0);
                 free(group);
                 free(graph);
                 continue;
             }
-            
-            NumberOfRooms = CRN(graph, L, C, group);
-            
-            /*
-            for(i1 = 0; i1 < V; i1++)
-            {
-                if(i1 % C == 0) printf("\n");
-                printf("%3d  ", group[i1]);
-            }
-            printf("\n\n\n");
-            */
-            treasure = group[i * C + j];
-            //printf("%d\n", group[treasure]);
-            
-            head = toSmallerMap(NumberOfRooms, group, graph, L, C);
-            
-            //treasure = get_index(C, i, j);
+            sz = NULL;
 
+            // Gets total number of rooms int the map
+            NumberOfRooms = CRN(graph, L, C, group);
+
+            treasure = group[i * C + j];
+
+            // Converts map to an adjacency list
+            head = toSmallerMap(NumberOfRooms, group, graph, L, C);
+
+            // Allocates memory for djisktra
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
                 exit(0);
@@ -242,20 +238,11 @@ int main(int argc, char **argv)
             bool *sptSet = (bool *)malloc(NumberOfRooms * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
-            
+
+            // Calls the djikstra
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
-            
-            //printFullList(head, NumberOfRooms);
 
-            //djisktra(graph, L, C, dist, parent, sptSet, treasure);
-            /*
-            printf("%d %d\n", i, j);
-            printf("treasure - %d\n", treasure);
-            for(i1 = 0; i1 < NumberOfRooms; i1++)
-                printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
-            printf("\n\n");
-            */
-
+            // Prints to the file the corret output
             switch (dist[treasure])
             {
             case INT_MAX:
@@ -275,6 +262,8 @@ int main(int argc, char **argv)
                 fprintf(ofp, "\n");
                 break;
             }
+
+            // frees memory
             if (walls != NULL)
             {
                 free(walls);
@@ -294,6 +283,5 @@ int main(int argc, char **argv)
     // Closes all the files
     fclose(ofp);
     fclose(fp);
-
     exit(0);
 }
