@@ -206,7 +206,6 @@ int main(int argc, char **argv)
 
             if (group == NULL || sz == NULL)
                 exit(0);
-            printf("CQWU:\n");
             // Compresses and check if vertices are onf the same room
             group = CWQU2(graph, L, C, group, sz);
             if (same_root2(graph, group, 0, 0, i, j, C, L))
@@ -217,16 +216,11 @@ int main(int argc, char **argv)
                 continue;
             }
             sz = NULL;
-            printf("out\n\n");
-            printf("CRN:\n");
             // Gets total number of rooms int the map
             NumberOfRooms = CRN(graph, L, C, group);
-            printf("out\n\n");
             treasure = group[i * C + j];
-            printf("Small:\n");
             // Converts map to an adjacency list
             head = toSmallerMap(NumberOfRooms, group, graph, L, C);
-            printf("out\n");
             // Allocates memory for djisktra
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
@@ -239,10 +233,8 @@ int main(int argc, char **argv)
             bool *sptSet = (bool *)malloc(NumberOfRooms * sizeof(bool));
             if (sptSet == NULL)
                 exit(0);
-            printf("djikstra:\n");
             // Calls the djikstra
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
-            printf("\n\n");
             // Prints to the file the corret output
             switch (dist[treasure])
             {

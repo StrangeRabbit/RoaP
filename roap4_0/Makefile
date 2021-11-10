@@ -32,6 +32,8 @@ FILES=${FILES_1} ${FILES_2} ${FILES_3} ${FILES_4}
 
 FILES_C=${FILES_C1} ${FILES_C2} ${FILES_C3} ${FILES_C4}
 
+VALG = valgrind --leak-check=full -s
+
 test:
 	for F in ${FILES}; do  ./roap $$F; done;
 
@@ -49,6 +51,9 @@ Enunciado:
 
 restore:
 	git restore ${FILES_C}
+
+val:
+	for F in ${FILES_4}; do ${VALG} ./roap $${F} ; done;
 
 clean:
 	rm -f $(PROJECT_NAME) *.o

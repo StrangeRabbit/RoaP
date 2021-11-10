@@ -26,6 +26,7 @@ int CRN(int *graph, int L, int C, int *group)
             // only changes if is white
             if (id_white(graph[i]))
             {
+
                   p = getRoot(group, i);
 
                   // Check if it is a new room or not, since all new rooms will have bigger root
@@ -253,7 +254,7 @@ int getRoot(int *group, int i)
 
       // Goes from up in the tree to get the root
       for (p = i; p != group[p]; p = group[p])
-            if (p < 0)
+            if (group[p] < 0)
                   return -1;
 
       return p;
