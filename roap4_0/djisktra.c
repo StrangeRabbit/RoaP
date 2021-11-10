@@ -8,7 +8,7 @@
 #include "game_mode.h"
 #include "heap.h"
 
-void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *heap, int hsize, int *lfree)
+void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *heap, int *position, int hsize, int *lfree)
 {
     list *aux;
     int flag, pos;
@@ -32,12 +32,12 @@ void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *
         }
         /* if vertice isnt in the heap, add it */
         if (flag == -1)
-            push(aux->vertice, dist, heap, hsize, lfree);
+            push(aux->vertice, dist, heap, hsize, lfree, position);
         /* if dist of vertice has been updated, fix it up in the heap */
         else if (flag == 2)
         {
-            pos = get_pos(heap, aux->vertice, *lfree);
-            FixUp(heap, pos, dist);
+            pos = get_pos(position, aux->vertice);
+            FixUp(heap, position, pos, dist);
         }
         /* go next vertice of the list */
         aux = aux->next;
@@ -59,8 +59,9 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
     unsigned int v;
     int u;
     int *heap;
+    int *position;
     int hsize, lfree;
-    hinit(V, &heap, &hsize, &lfree);
+    hinit(V, &heap, &hsize, &lfree, &position);
 
     for (v = 0; v < V; v++)
     {
@@ -71,7 +72,7 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
     sptSet[0] = true;
     parent[0] = 0;
     /* connect the paths of vertice 0 */
-    connect(dist, parent, sptSet, graph, 0, heap, hsize, &lfree);
+    connect(dist, parent, sptSet, graph, 0, heap, position, hsize, &lfree);
 
     while (lfree > 0)
     {
@@ -83,7 +84,7 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
         printf("\n");
         */
         /* pop the shortest path */
-        u = pop(heap, dist, &lfree);
+        u = pop(heap, position, dist, &lfree);
         /*
         //printf("u: %d\n", u);
         for(int w = 0; w < lfree; w++)
@@ -99,7 +100,7 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
         if (u == room2)
             break;
         /* connect or update next vertices */
-        connect(dist, parent, sptSet, graph, u, heap, hsize, &lfree);
+        connect(dist, parent, sptSet, graph, u, heap, position, hsize, &lfree);
         /*
         for(int w = 0; w < lfree; w++)
         {
@@ -114,5 +115,6 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
         */
     }
     free(heap);
+    free(position);
     return;
 }
