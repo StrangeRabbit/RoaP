@@ -88,7 +88,7 @@ w *get_walls(int *parent, int src, int W, list **graph)
 int main(int argc, char **argv)
 {
     int i1 = 0, j1 = 0, i2 = 0, j2 = 0;
-    int L, C, V, i, j, P, treasure;
+    int L, C, V, i, j, P, treasure, W;
     int NumberOfRooms = 0;
     w *walls = NULL;
     mode game_mode;
@@ -230,16 +230,16 @@ int main(int argc, char **argv)
 
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
             
-            printFullList(head, NumberOfRooms);
+            //printFullList(head, NumberOfRooms);
 
             //djisktra(graph, L, C, dist, parent, sptSet, treasure);
-
+            /*
             printf("%d %d\n", i, j);
             printf("treasure - %d\n", treasure);
             for(i1 = 0; i1 < NumberOfRooms; i1++)
                 printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
             printf("\n\n");
-            /*
+            */
             
             switch (dist[treasure])
             {
@@ -256,10 +256,10 @@ int main(int argc, char **argv)
                 W = count_walls(parent, treasure);
                 fprintf(ofp, "%d\n", W);
                 walls = get_walls(parent, treasure, W, head);
-                print_walls(W, ofp, P);
+                print_walls(walls, ofp, W);
                 fprintf(ofp, "\n");
                 break;
-            } */
+            } 
             if (walls != NULL)
             {
                 free(walls);
