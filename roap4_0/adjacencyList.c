@@ -16,19 +16,22 @@ int CRN(int *graph, int L, int C, int *group)
       int newRoot = 0;
       int p = 0;
       int aux;
-/*
+      /*
       for (int i = 0; i < L; i++)
       {
             for (int j = 0; j < C; j++)
             {
+
                   printf("%6d ", graph[i * C + j]);
             }
             printf("\n");
       }
-      printf("\n");
-*/
-      for (unsigned int i = 0; i < L * C; i++)
+      printf("\n");*/
+
+      int V = L * C;
+      for (unsigned int i = 0; i < V; i++)
       {
+            //printf("i: %d\n\n", i);
             if (id_white(graph[i]))
             {
                   p = getRoot(group, i);
@@ -38,30 +41,34 @@ int CRN(int *graph, int L, int C, int *group)
                         lastOldRoot = p;
                         aux = 0;
                         //printf("%d %d\n", newRoot, lastOldRoot);
-                        for (unsigned int j = i; j < L * C; j++, aux++)
+                        for (unsigned int j = i; j < V; j++)
                         {
-                              if(j % C == 0) aux = 0;
-                              if (group[j] == p){
+                              ++aux;
+                              if (aux == C + 1)
+                                    break;
+                              if (j % C == 0)
+                                    aux = 0;
+                              if (group[j] == p)
+                              {
                                     group[j] = newRoot;
                                     aux = 0;
                               }
-                              if(aux == C) break;
-
                         }
                   }
             }
       }
-/*
+
+      /*
       for (int i = 0; i < L; i++)
       {
             for (int j = 0; j < C; j++)
             {
+
                   printf("%6d ", group[i * C + j]);
             }
             printf("\n");
       }
-      printf("\n");
-*/
+      printf("\n");*/
 
       return ++newRoot;
 }
@@ -205,13 +212,20 @@ bool id_white(int aux)
       return false;
 }
 
-int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int column)
+int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int column, int line)
 {
       int p = i1 * column + j1;
       int q = i2 * column + j2; // Gets two roots of the tree
 
-      p = getRoot(group, p);
-      q = getRoot(group, q);
+      if (is_cell_in_board(line, column, i1, j1) && is_cell_in_board(line, column, i2, j2))
+      {
+            p = getRoot(group, p);
+            q = getRoot(group, q);
+      }
+      else
+      {
+            return 0;
+      }
 
       // Checks the roots
       if (p == q)
@@ -223,10 +237,13 @@ int same_root2(int *matrix, int *group, int i1, int j1, int i2, int j2, int colu
 int getRoot(int *group, int i)
 {
       int p;
-      if (i == -1)
+      //printf("%d\n", group[i]);
+      if (i < 0)
             return -1;
+
       for (p = i; p != group[p]; p = group[p])
-            ;
+            if (p < 0)
+                  return -1;
 
       return p;
 }
@@ -255,6 +272,7 @@ list **toSmallerMap(int NumberOfRooms, int *group, int *graph, int L, int C)
                         if (graph[i * C + j] == 0 && graph[(i + 2) * C + j] == 0 && graph[(i + 1) * C + j] != -1)
                               if (group[i * C + j] != group[(i + 2) * C + j]) // temos uma parede no meio
                               {
+                                    //printf("%d %d\n", group[(i + 2) * C + j], (i + 2) * C + j);
                                     array[group[i * C + j]] = updateListCost(array[group[i * C + j]], group[(i + 2) * C + j], graph[(i + 1) * C + j], i + 1, j);
                                     array[group[(i + 2) * C + j]] = updateListCost(array[group[(i + 2) * C + j]], group[i * C + j], graph[(i + 1) * C + j], i + 1, j);
                               }
@@ -282,7 +300,6 @@ list *updateListCost(list *array, int group, int cost, int i, int j)
                         aux->j = j;
                   }
                   break;
-                  
             }
             aux = aux->next;
       }
@@ -320,8 +337,9 @@ void freeMatrix(list **array, int V)
       return;
 }
 
+/*
 void printFullList(list **array, int V)
-{
+{ 
       list *aux = NULL;
       if (array != NULL)
             for (int i = 0; i < V; i++)
@@ -335,3 +353,4 @@ void printFullList(list **array, int V)
                   printf("\n\n");
             }
 }
+*/

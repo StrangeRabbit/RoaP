@@ -188,7 +188,12 @@ int main(int argc, char **argv)
             }
 
             graph = build_graph(fp, C, V, P, &min_j, &min_i);
-            
+            if (graph[i * C + j] != 0 || graph[0])
+            {
+                free(graph);
+                fprintf(ofp, "-1\n\n");
+                continue;
+            }
 
             // Alocate array that will be used in CWQU
             group = (int *)malloc(L * C * sizeof(int));
@@ -201,18 +206,22 @@ int main(int argc, char **argv)
 
             sz = NULL; // No longer need to keep this array since i wont be neeging the size of the array
 
-            if (same_root2(graph, group, 0, 0, i, j, C))
+            if (same_root2(graph, group, 0, 0, i, j, C, L))
             {
                 fprintf(ofp, "%d\n", 0); // Estão na mesma sala
+                free(group);
+                free(sz);
                 free(graph);
                 continue;
             }
 
             NumberOfRooms = CRN(graph, L, C, group);
 
+            treasure = group[i * C + j];
+            //printf("%d\n", group[treasure]);
             head = toSmallerMap(NumberOfRooms, group, graph, L, C);
 
-            treasure = group[i * C + j];
+            //treasure = get_index(C, i, j);
 
             int *dist = (int *)malloc(NumberOfRooms * sizeof(int));
             if (dist == NULL)
@@ -226,10 +235,8 @@ int main(int argc, char **argv)
             if (sptSet == NULL)
                 exit(0);
 
-            //treasure = get_index(C, i, j);
-
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
-            
+
             //printFullList(head, NumberOfRooms);
 
             //djisktra(graph, L, C, dist, parent, sptSet, treasure);
@@ -240,7 +247,7 @@ int main(int argc, char **argv)
                 printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
             printf("\n\n");
             */
-            
+
             switch (dist[treasure])
             {
             case INT_MAX:
@@ -259,7 +266,7 @@ int main(int argc, char **argv)
                 print_walls(walls, ofp, W);
                 fprintf(ofp, "\n");
                 break;
-            } 
+            }
             if (walls != NULL)
             {
                 free(walls);
