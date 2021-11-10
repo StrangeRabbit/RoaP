@@ -8,6 +8,19 @@
 #include "game_mode.h"
 #include "heap.h"
 
+/**
+ * @brief update distances of all elements connected to the room
+ * 
+ * @param dist array of distances of the room
+ * @param parent array with parents of each room in the shortest path
+ * @param sptSet array of tree elements
+ * @param graph adjacency list of the graph
+ * @param room room to update
+ * @param heap heap
+ * @param position array of positions of the vertices in the heap
+ * @param hsize size of the heap
+ * @param lfree first element free in the heap
+ */
 void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *heap, int *position, int hsize, int *lfree)
 {
     list *aux;
@@ -44,16 +57,40 @@ void connect(int *dist, int *parent, bool *sptSet, list **graph, int room, int *
     }
 }
 
+/**
+ * @brief gets the line of an index
+ * 
+ * @param idx index to get the line
+ * @param C number of columns of the graph
+ * @return the line of the index
+ */
 int i_idx(int idx, int C)
 {
     return idx / C;
 }
 
+/**
+ * @brief gets the column of an index
+ * 
+ * @param idx index to get the column
+ * @param C number of columns of the graph
+ * @return the column of the index
+ */
 int j_idx(int idx, int C)
 {
     return idx % C;
 }
 
+/**
+ * @brief shortest path algorithm
+ * 
+ * @param graph adjacency list of the graph
+ * @param room2 the objective
+ * @param dist array of distances of the rooms to the source
+ * @param parent array of the parents of each room in shortest path
+ * @param sptSet array of the elements in the tree
+ * @param V number of rooms of the graph
+ */
 void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int V)
 {
     unsigned int v;
@@ -73,47 +110,24 @@ void djisktra(list **graph, int room2, int *dist, int *parent, bool *sptSet, int
     parent[0] = 0;
     /* connect the paths of vertice 0 */
     connect(dist, parent, sptSet, graph, 0, heap, position, hsize, &lfree);
-
+    /* while heap isnt empty */
     while (lfree > 0)
     {
-        /*
-        for(int w = 0; w < lfree; w++)
-        {
-            printf("%d(%d) - ", heap[w], dist[heap[w]]);
-        }
-        printf("\n");
-        */
         /* pop the shortest path */
         u = pop(heap, position, dist, &lfree);
-        /*
-        //printf("u: %d\n", u);
-        for(int w = 0; w < lfree; w++)
-        {
-            printf("%d(%d) - ", heap[w], dist[heap[w]]);
-        }
-        printf("\n");
-        */
-        //printf("%d %d\n\n\n", i, j);
+        
         /* put it in the tree */
         sptSet[u] = true;
-        /* if we reach the treasure, stop */
+
+        /* if we reach the treasure, break */
         if (u == room2)
             break;
+
         /* connect or update next vertices */
         connect(dist, parent, sptSet, graph, u, heap, position, hsize, &lfree);
-        /*
-        for(int w = 0; w < lfree; w++)
-        {
-            printf("%d(%d) - ", heap[w], dist[heap[w]]);
-        }
-        printf("\n\n\n\n");
-        */
-        /*
-        int rand;
-        scanf("%d", &rand);
-        printf("%d\n", dist[rand]);
-        */
+        
     }
+    /* free heap */
     free(heap);
     free(position);
     return;
