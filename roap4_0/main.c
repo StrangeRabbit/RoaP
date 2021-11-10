@@ -187,21 +187,8 @@ int main(int argc, char **argv)
                 continue;
             }
 
-            if (fscanf(fp, "%d %d %d", &i1, &j1, &flag) != 3)
-                exit(0);
-            i1--;
-            j1--;
-            if ((i1 >= i && i != 0) || (i == 0 && j1 > j))
-            {
-                jump_map(fp, P - 1);
-                fprintf(ofp, "%d\n\n", 0);
-                continue;
-            }
-
-            min_j = j1;
-            min_i = INT_MAX;
-            graph = build_graph(fp, C, V, P - 1, &min_j, &min_i);
-            graph[i1 * C + j1] = flag; // Add value to the map
+            graph = build_graph(fp, C, V, P, &min_j, &min_i);
+            
 
             // Alocate array that will be used in CWQU
             group = (int *)malloc(L * C * sizeof(int));
@@ -242,17 +229,17 @@ int main(int argc, char **argv)
             treasure = get_index(C, i, j);
 
             djisktra(head, treasure, dist, parent, sptSet, NumberOfRooms);
-
+            
             printFullList(head, NumberOfRooms);
 
             //djisktra(graph, L, C, dist, parent, sptSet, treasure);
 
-            /*
             printf("%d %d\n", i, j);
             printf("treasure - %d\n", treasure);
-            for(i1 = 0; i1 < V; i1++)
+            for(i1 = 0; i1 < NumberOfRooms; i1++)
                 printf("(%d)%d \n", i1, dist[i1] == INT_MAX ? -1 : dist[i1]);
             printf("\n\n");
+            /*
             
             switch (dist[treasure])
             {
