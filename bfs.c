@@ -20,10 +20,10 @@ void streak_room(int *graph, int v, int L, int C, int room){
     while(head != NULL){
         v = BFS_pop(&head, &tail);
         graph[v] = room;
-        if(BFS_connectable(graph, v, v - C, L, C)) BFS_push(&head, &tail, v - C);
-        if(BFS_connectable(graph, v, v + 1, L, C)) BFS_push(&head, &tail, v + 1);
-        if(BFS_connectable(graph, v, v + C, L, C)) BFS_push(&head, &tail, v + C);
-        if(BFS_connectable(graph, v, v - 1, L, C)) BFS_push(&head, &tail, v - 1);
+        if(BFS_connectable(graph, v, v - C, L, C) && !in_queue(head, v - C)) BFS_push(&head, &tail, v - C);
+        if(BFS_connectable(graph, v, v + 1, L, C) && !in_queue(head, v + 1)) BFS_push(&head, &tail, v + 1);
+        if(BFS_connectable(graph, v, v + C, L, C) && !in_queue(head, v + C)) BFS_push(&head, &tail, v + C);
+        if(BFS_connectable(graph, v, v - 1, L, C) && !in_queue(head, v - 1)) BFS_push(&head, &tail, v - 1);
     }
     
 }
