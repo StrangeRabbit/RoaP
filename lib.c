@@ -31,7 +31,7 @@ bool breakable(int *graph, int v, int C, int L)
         if(graph[v + 1] == 0 && graph[v - 1] == 0)
             return true;
     
-    if(I(v + C, C) < L && I(v - C, C) > -1)
+    if(I(v + C, C) < L && I(v - C, C) > -1 && v - C > -1)
         if(graph[v + C] == 0 && graph[v - C] == 0)
             return true;
     return false;
