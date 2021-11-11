@@ -80,10 +80,10 @@ int main(int argc, char **argv)
             BFS_empty_queue(&head, &tail);
             continue;
         }
-        printf("bfs\n");
+        
         /* connect rooms */
         bfs(graph, L, C, &N_rooms);
-        printf("out\n");
+        
         /* check cost 0 */
         if (graph[0] == graph[objective])
         {
