@@ -4,15 +4,6 @@
 
 #include "queue.h"
 
-bool in_queue(edge *head, int v)
-{
-    while(head != NULL){
-        if(head->v == v) return true;
-        head = head->next;
-    }
-    return false;
-}
-
 int BFS_pop(edge **head, edge **tail)
 {
     int v;

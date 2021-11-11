@@ -14,16 +14,27 @@ bool BFS_connectable(int *graph, int v1, int v2, int L, int C)
 void streak_room(int *graph, int v, int L, int C, int room){
     edge *head = NULL;
     edge *tail = NULL;
-
+    graph[v] = room;
     BFS_push(&head, &tail, v);
     
     while(head != NULL){
         v = BFS_pop(&head, &tail);
-        graph[v] = room;
-        if(BFS_connectable(graph, v, v - C, L, C) && !in_queue(head, v - C)) BFS_push(&head, &tail, v - C);
-        if(BFS_connectable(graph, v, v + 1, L, C) && !in_queue(head, v + 1)) BFS_push(&head, &tail, v + 1);
-        if(BFS_connectable(graph, v, v + C, L, C) && !in_queue(head, v + C)) BFS_push(&head, &tail, v + C);
-        if(BFS_connectable(graph, v, v - 1, L, C) && !in_queue(head, v - 1)) BFS_push(&head, &tail, v - 1);
+        if(BFS_connectable(graph, v, v - C, L, C)) {
+            graph[v - C] = room;
+            BFS_push(&head, &tail, v - C);
+        }
+        if(BFS_connectable(graph, v, v + 1, L, C)){
+            graph[v + 1] = room;
+            BFS_push(&head, &tail, v + 1);
+        } 
+        if(BFS_connectable(graph, v, v + C, L, C)){
+            graph[v + C] = room; 
+            BFS_push(&head, &tail, v + C);
+        }
+        if(BFS_connectable(graph, v, v - 1, L, C)){
+            graph[v - 1] = room; 
+            BFS_push(&head, &tail, v - 1);
+        }
     }
     
 }
