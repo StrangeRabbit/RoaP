@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "queue.h"
+#include "queue_array.h"
 #include "lib.h"
 
 bool BFS_connectable(int *graph, int v1, int v2, int L, int C)
@@ -12,28 +12,30 @@ bool BFS_connectable(int *graph, int v1, int v2, int L, int C)
 }
 
 void streak_room(int *graph, int v, int L, int C, int room){
-    edge *head = NULL;
-    edge *tail = NULL;
+    int size = 2 * L + 2 * C;
+    int *queue = init_queue(2 * L + 2 * C);
+    int pusher = 0;
+    int poper = 0;
     graph[v] = room;
-    BFS_push(&head, &tail, v);
+    push(&pusher, size, queue, v);
     
-    while(head != NULL){
-        v = BFS_pop(&head, &tail);
+    while(poper != pusher){
+        v = pop(&poper, size, queue, v);
         if(BFS_connectable(graph, v, v - C, L, C)) {
             graph[v - C] = room;
-            BFS_push(&head, &tail, v - C);
-        }
-        if(BFS_connectable(graph, v, v + 1, L, C)){
-            graph[v + 1] = room;
-            BFS_push(&head, &tail, v + 1);
-        } 
-        if(BFS_connectable(graph, v, v + C, L, C)){
-            graph[v + C] = room; 
-            BFS_push(&head, &tail, v + C);
+            push(&pusher, size, queue, v - C);
         }
         if(BFS_connectable(graph, v, v - 1, L, C)){
             graph[v - 1] = room; 
-            BFS_push(&head, &tail, v - 1);
+            push(&pusher, size, queue, v - C);
+        }
+        if(BFS_connectable(graph, v, v + 1, L, C)){
+            graph[v + 1] = room;
+            push(&pusher, size, queue, v + 1);
+        } 
+        if(BFS_connectable(graph, v, v + C, L, C)){
+            graph[v + C] = room; 
+            push(&pusher, size, queue, v + C);
         }
     }
     
