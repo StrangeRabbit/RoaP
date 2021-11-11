@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     //edge *aux;
     //_room *aux;
     
-    int i, j, P, *graph, L, C, V, N_rooms, objective, final_room, *dist, *parent;
+    int i, j, P, *graph, L, C, N_rooms, objective, final_room, *dist, *parent;
     bool *sptSet;
     FILE *fp, *ofp;
     edge *head = NULL, *tail = NULL;
@@ -45,7 +45,6 @@ int main(int argc, char **argv)
 
     while(fscanf(fp, "%d %d", &L, &C) == 2){
 
-        V = L * C;
         /* get  header */
         header(fp, &i, &j, &P);
 

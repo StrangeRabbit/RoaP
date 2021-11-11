@@ -33,7 +33,7 @@ void read_file(FILE *fp, int **graph, char *filename, int P, int L, int C, edge 
         i--; j--;
         (*graph)[idx(i, j, C)] = v;
     }
-
+    *head = NULL; *tail = NULL;
     /* save walls */
     for(a = 0; a < V; a++){
         if((*graph)[a] > 0 && breakable(*graph, a, C, L))
