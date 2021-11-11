@@ -38,7 +38,7 @@ void streak_room(int *graph, int v, int L, int C, int room){
             push(&pusher, size, queue, v + C);
         }
     }
-    
+    free_queue(queue);
 }
 
 void bfs(int *graph, int L, int C, int *N_rooms)
