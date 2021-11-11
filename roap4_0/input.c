@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "input.h"
+#include "adjacencyList.h"
 
 /**
  * @brief Confirms if konsole input has all it need 
@@ -171,24 +172,56 @@ cell *build_board(FILE *fp, int row, int column, int wall_number)
  * @return double pointer to the graph
  */
 
-int *build_graph(FILE *fp, int C, int V, int P, int *min_j, int *min_i)
+list **build_graph(FILE *fp, int C, int L, int V, int P, int *min_j, int *min_i)
 {
-    unsigned int p;
-    int i, j, v, idx;
+    // variable used to see get wall values
 
-    int *graph = init_graph(V);
+    int *array = (int *)calloc(3 * C, sizeof(int));
 
-    for (p = 0; p < P; p++)
+    /*
+        linha atual
+        inha seguinte  
+        linha seguinte seguinte    = 0;
+    */
+
+    int i = 0, j = 0, v = 0;
+    int line = 1;
+    int k = 0;
+    int numberOfRooms = 0;
+    int whereToClean = 0;
+    int maxLineToRead = 2;
+    int linesToRead = L;
+    int idx = 0;
+
+    bool flag = false;
+    bool first3lines = true;
+
+    while (k < L || P > 0)
     {
-        if (fscanf(fp, "%d %d %d", &i, &j, &v) != 3)
-            exit(0);
-        i--;
-        j--;
-        idx = get_index(C, i, j);
-        graph[idx] = v;
-    }
+        // ler uma linha completa e colocar no array
+        while (k == i)
+        {
+            if (fscanf(fp, "%d %d %d", &i, &j, &k) != 3)
+                exit(0);
+            P -= 1;
+            i -= 1;
+            j -= 1;
 
-    return graph;
+            if (i > 2) // puts in array
+                array[2 * C + j] = v;
+            else
+                array[i * C + j] = v;
+        }
+        k++; // li uma linha completa
+
+        //CWQU2()
+
+        // limpar o array para ler outra linha
+        for (int q = 0; q < 2 * C; q++)
+            array[q] = array[q + C];
+        for (int q = 2 * C; q < 3 * C; q++)
+            array[q] = 0;
+    }
 }
 
 /**

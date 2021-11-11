@@ -190,7 +190,7 @@ int main(int argc, char **argv)
             }
 
             // Build the graph
-            graph = build_graph(fp, C, V, P, &min_j, &min_i);
+            head = build_graph(fp, C, L, V, P, &min_j, &min_i);
 
             // Check if djisktra is needed to solve the map or not
             if (graph[i * C + j] != 0 || graph[0] != 0)
