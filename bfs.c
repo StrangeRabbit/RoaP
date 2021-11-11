@@ -35,7 +35,7 @@ void streak_room(int *graph, int v, int L, int C, int room){
         }
         if(BFS_connectable(graph, v, v - 1, L, C)){
             graph[v - 1] = room; 
-            ARRAY_push(&pusher, size, queue, v - C);
+            ARRAY_push(&pusher, size, queue, v - 1);
         }
     }
     free_queue(queue);

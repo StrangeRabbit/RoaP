@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 
         /* connect rooms */
         bfs(graph, L, C, &N_rooms);
-        
+
         /* check cost 0 */
         if (graph[0] == graph[objective])
         {
