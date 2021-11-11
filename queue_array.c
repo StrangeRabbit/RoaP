@@ -10,15 +10,18 @@ int *init_queue(int size)
     else return queue;
 }
 
-void push(int *pusher, int size, int queue[], int v)
+void ARRAY_push(int *pusher, int size, int queue[], int v)
 {
-    queue[((*pusher)++ % size)] = v;
+    queue[((*pusher) % size)] = v;
+    (*pusher)++;
     return ;
 }
 
-int pop(int *poper, int size, int queue[], int v)
+int ARRAY_pop(int *poper, int size, int queue[])
 {
-    return queue[(*poper)++ % size];
+    int v = (*poper);
+    (*poper)++;
+    return queue[v % size];
 }
 
 void free_queue(int queue[])

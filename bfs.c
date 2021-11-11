@@ -17,25 +17,25 @@ void streak_room(int *graph, int v, int L, int C, int room){
     int pusher = 0;
     int poper = 0;
     graph[v] = room;
-    push(&pusher, size, queue, v);
+    ARRAY_push(&pusher, size, queue, v);
     
     while(poper != pusher){
-        v = pop(&poper, size, queue, v);
+        v = ARRAY_pop(&poper, size, queue);
         if(BFS_connectable(graph, v, v - C, L, C)) {
             graph[v - C] = room;
-            push(&pusher, size, queue, v - C);
-        }
-        if(BFS_connectable(graph, v, v - 1, L, C)){
-            graph[v - 1] = room; 
-            push(&pusher, size, queue, v - C);
+            ARRAY_push(&pusher, size, queue, v - C);
         }
         if(BFS_connectable(graph, v, v + 1, L, C)){
             graph[v + 1] = room;
-            push(&pusher, size, queue, v + 1);
+            ARRAY_push(&pusher, size, queue, v + 1);
         } 
         if(BFS_connectable(graph, v, v + C, L, C)){
             graph[v + C] = room; 
-            push(&pusher, size, queue, v + C);
+            ARRAY_push(&pusher, size, queue, v + C);
+        }
+        if(BFS_connectable(graph, v, v - 1, L, C)){
+            graph[v - 1] = room; 
+            ARRAY_push(&pusher, size, queue, v - C);
         }
     }
     free_queue(queue);
