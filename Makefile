@@ -3,7 +3,7 @@ PROJECT_NAME = roap #target file name
 CC = gcc #compiler
 CFLAGS = -Wall -std=c99 -g
 
-OBJECTS = main.o reader.o queue.o lib.o bfs.o list.o djikstra.o heap.o #objects
+OBJECTS = main.o reader.o queue.o lib.o bfs.o list.o djikstra.o heap.o print.o #objects
 
 all: $(PROJECT_NAME)
 
@@ -18,6 +18,7 @@ lib.o: lib.c lib.h
 list.o: list.c list.h queue.h lib.h
 queue.o: queue.c queue.h
 reader.o: reader.c reader.h lib.h queue.h
+print.o: print.c print.h list.h lib.h list.h
 
 FILES_1=$(shell ls Bilhar_Pequeno/*.in)
 FILES_2=$(shell ls Chess_Party/*.in)
