@@ -1,7 +1,7 @@
 PROJECT_NAME = roap #target file name
 
 CC = gcc #compiler
-CFLAGS = -Wall -std=c99 -g
+CFLAGS = -Wall -std=c99 -O3
 
 OBJECTS = main.o reader.o queue.o lib.o bfs.o list.o djikstra.o heap.o print.o #objects
 
