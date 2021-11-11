@@ -18,10 +18,6 @@
 
 int main(int argc, char **argv)
 {
-    //unsigned int a;
-    //edge *aux;
-    //_room *aux;
-    clock_t begin, end;
     int i, j, P, *graph, L, C, N_rooms, objective, final_room, *dist, *parent;
     bool *sptSet;
     FILE *fp, *ofp;
@@ -69,12 +65,11 @@ int main(int argc, char **argv)
             jump_map(fp, P);
             continue;
         }
-        begin = clock();
+
         /* read file, save graph and save walls */
         objective = idx(i, j, C);
         read_file(fp, &graph, filename, P, L, C, &head, &tail);
-        end = clock();
-        printf("time of read: %f\n", (double) (end - begin) / CLOCKS_PER_SEC);
+
         /* validate input data */
         if (!white(0, graph) || !white(objective, graph))
         {
@@ -83,11 +78,10 @@ int main(int argc, char **argv)
             BFS_empty_queue(&head, &tail);
             continue;
         }
-        begin = clock();
+
         /* connect rooms */
         bfs(graph, L, C, &N_rooms);
-        end = clock();
-        printf("time of bfs: %f\n", (double) (end - begin) / CLOCKS_PER_SEC);
+        
         /* check cost 0 */
         if (graph[0] == graph[objective])
         {
@@ -99,11 +93,10 @@ int main(int argc, char **argv)
 
         /* get room of the treasure */
         final_room = graph[objective] * (-1) - 2;
-        begin = clock();
+        
         /* build list */
         list = create_list(graph, N_rooms, head, tail, L, C);
-        end = clock();
-        printf("time of creating list: %f\n", (double) (end - begin) / CLOCKS_PER_SEC);
+        
         /* free matrix */
         free(graph);
 
@@ -119,11 +112,10 @@ int main(int argc, char **argv)
         sptSet = (bool *)malloc(N_rooms * sizeof(bool));
         if (sptSet == NULL)
             exit(0);
-        begin = clock();
+        
         /* get shortest path */
         djisktra(list, final_room, dist, parent, sptSet, N_rooms);
-        end = clock();
-        printf("time of djikstra: %f\n", (double) (end - begin) / CLOCKS_PER_SEC);
+        
         switch (dist[final_room])
         {
         case INT_MAX:
