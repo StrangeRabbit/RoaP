@@ -10,5 +10,6 @@ typedef struct _edge
 bool in_queue(edge *head, int v);
 int BFS_pop(edge **head, edge **tail);
 void BFS_push(edge **head, edge **tail, int v);
+void BFS_empty_queue(edge **head, edge **tail);
 
 #endif

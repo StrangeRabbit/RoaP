@@ -72,7 +72,7 @@ int main(int argc, char **argv)
         {
             fprintf(ofp, "-1\n\n");
             free(graph);
-            freeBFS(&head, &tail);
+            BFS_empty_queue(&head, &tail);
             continue;
         }
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         {
             fprintf(ofp, "0\n\n");
             free(graph);
-            freeBFS(&head, &tail);
+            BFS_empty_queue(&head, &tail);
             continue;
         }
 
@@ -127,8 +127,6 @@ int main(int argc, char **argv)
             printWalls(list, parent, final_room, ofp, C, 0);
             fprintf(ofp, "\n");
         }
-
-        //printWalls(dist, parent);
 
         /* free stuff */
         free(dist);

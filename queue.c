@@ -45,4 +45,14 @@ void BFS_push(edge **head, edge **tail, int v)
         (*tail)->next = aux;
         *tail = aux;
     }
+    return ;
+}
+
+void BFS_empty_queue(edge **head, edge **tail)
+{
+    int v;
+    while(*head != NULL)
+        v = BFS_pop(head, tail);
+    v++;
+    return;
 }
