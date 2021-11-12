@@ -16,6 +16,12 @@
 
 #define MAX_LENGHT 100
 
+/**
+ * @brief Main function that controls the program 
+ * @param argc argument count 
+ * @param argv argument vector 
+ * @return 0 if program is successful
+ */
 int main(int argc, char **argv)
 {
     int i, j, P, *graph, L, C, N_rooms, objective, final_room, *dist, *parent, *wall_queue, size, pusher = 0, poper = 0;
@@ -59,7 +65,8 @@ int main(int argc, char **argv)
             jump_map(fp, P);
             continue;
         }
-        if((i == 1 && j == 0) || (i == 0 && j == 1)){
+        if ((i == 1 && j == 0) || (i == 0 && j == 1))
+        {
             fprintf(ofp, "0\n\n");
             jump_map(fp, P);
             continue;
@@ -95,10 +102,10 @@ int main(int argc, char **argv)
 
         /* get room of the treasure */
         final_room = graph[objective] * (-1) - 2;
-        
+
         /* build list */
         list = create_list(graph, N_rooms, wall_queue, &poper, &pusher, size, L, C);
-        
+
         /* free matrix */
         free(graph);
 
@@ -114,10 +121,10 @@ int main(int argc, char **argv)
         sptSet = (bool *)malloc(N_rooms * sizeof(bool));
         if (sptSet == NULL)
             exit(0);
-        
+
         /* get shortest path */
         djisktra(list, final_room, dist, parent, sptSet, N_rooms);
-        
+
         switch (dist[final_room])
         {
         case INT_MAX:
