@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "queue_array.h"
+#include "queue.h"
 #include "lib.h"
 
 /** 

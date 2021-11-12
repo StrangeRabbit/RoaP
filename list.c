@@ -4,6 +4,7 @@
 
 #include "list.h"
 #include "lib.h"
+#include "queue.h"
 
 bool LIST_connectable(int *graph, int v1, int v2, int L, int C)
 {
@@ -42,7 +43,7 @@ _room *in_list(_room *list, int v)
     return NULL;
 }
 
-_room **create_list(int *graph, int rooms, edge *head, edge *tail, int L, int C)
+_room **create_list(int *graph, int rooms, int *queue, int *poper, int *pusher, int size, int L, int C)
 {
     int i, v, v1, v2, room1, room2;
     _room *pos1, *pos2;
@@ -51,9 +52,9 @@ _room **create_list(int *graph, int rooms, edge *head, edge *tail, int L, int C)
     for(i = 0; i < rooms; i++)
         list[i] = NULL;
     
-    while (head != NULL)
+    while (*pusher != *poper)
     {
-        v = BFS_pop(&head, &tail);
+        v = ARRAY_pop(poper, size, queue);
         
         v1 = v - 1;
         v2 = v + 1;
@@ -90,6 +91,7 @@ _room **create_list(int *graph, int rooms, edge *head, edge *tail, int L, int C)
             } 
         }
     }
+    free(queue);
     return list;
 }
 

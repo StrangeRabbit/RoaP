@@ -67,7 +67,10 @@ int main(int argc, char **argv)
 
         /* read file, save graph and save walls */
         objective = idx(i, j, C);
-        read_file(fp, &graph, filename, P, L, C, &wall_queue, P, &pusher);
+        size = P;
+        pusher = 0;
+        poper = 0;
+        read_file(fp, &graph, filename, P, L, C, &wall_queue, size, &pusher);
 
         /* validate input data */
         if (!white(0, graph) || !white(objective, graph))
@@ -94,7 +97,7 @@ int main(int argc, char **argv)
         final_room = graph[objective] * (-1) - 2;
         
         /* build list */
-        list = create_list(graph, N_rooms, head, tail, L, C);
+        list = create_list(graph, N_rooms, wall_queue, &poper, &pusher, size, L, C);
         
         /* free matrix */
         free(graph);

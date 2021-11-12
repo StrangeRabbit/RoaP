@@ -1,8 +1,6 @@
 #ifndef __LIST__
 #define __LIST__
 
-#include "queue.h"
-
 typedef struct _ROOM{
     int room;
     int v;
@@ -10,7 +8,7 @@ typedef struct _ROOM{
     struct _ROOM *next;
 } _room;
 
-_room **create_list(int *graph, int rooms, edge *head, edge *tail, int L, int C);
+_room **create_list(int *graph, int rooms, int *queue, int *poper, int *pusher, int size, int L, int C);
 void free_list(_room **list, int rooms);
 
 #endif
