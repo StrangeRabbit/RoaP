@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         size = P;
         pusher = 0;
         poper = 0;
-        read_file(fp, &graph, filename, P, L, C, &wall_queue, size, &pusher);
+        read_file(fp, &graph, P, L, C, &wall_queue, size, &pusher);
 
         /* validate input data */
         if (!white(0, graph) || !white(objective, graph))

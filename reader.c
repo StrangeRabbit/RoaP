@@ -5,7 +5,14 @@
 #include "reader.h"
 #include "lib.h"
 #include "queue.h"
-
+ /**
+  * @brief read the header of the file
+  * 
+  * @param fp pointer to file
+  * @param i pointer to i objective of the map
+  * @param j pointer to j objective of the map
+  * @param P pointer to number of walls
+  */
 void header(FILE *fp, int *i, int *j, int *P)
 {
 
@@ -17,7 +24,19 @@ void header(FILE *fp, int *i, int *j, int *P)
     return;
 }
 
-void read_file(FILE *fp, int **graph, char *filename, int P, int L, int C, int *queue[], int size, int *pusher)
+/**
+ * @brief read the walls of the file, create graph and wall queue
+ * 
+ * @param fp pointer to file
+ * @param graph pointer to the graph
+ * @param P number of walls
+ * @param L lines of graph
+ * @param C columns of graph
+ * @param queue wall queue
+ * @param size size of queue
+ * @param pusher position to push
+ */
+void read_file(FILE *fp, int **graph, int P, int L, int C, int *queue[], int size, int *pusher)
 {
     int i, j, v;
     unsigned int a;
