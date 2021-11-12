@@ -1,14 +1,9 @@
-#ifndef _QUEUE_
-#define _QUEUE_
+#ifndef _QUEUE_ARRAY_
+#define _QUEUE_ARRAY_
 
-typedef struct _edge
-{
-    int v;
-    struct _edge *next;
-} edge;
-
-int BFS_pop(edge **head, edge **tail);
-void BFS_push(edge **head, edge **tail, int v);
-void BFS_empty_queue(edge **head, edge **tail);
+int *init_queue(int size);
+void ARRAY_push(int *pusher, int size, int queue[], int v);
+int ARRAY_pop(int *poper, int size, int queue[]);
+void free_queue(int queue[]);
 
 #endif

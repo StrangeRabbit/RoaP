@@ -18,10 +18,9 @@
 
 int main(int argc, char **argv)
 {
-    int i, j, P, *graph, L, C, N_rooms, objective, final_room, *dist, *parent;
+    int i, j, P, *graph, L, C, N_rooms, objective, final_room, *dist, *parent, *wall_queue, size, pusher = 0, poper = 0;
     bool *sptSet;
     FILE *fp, *ofp;
-    edge *head = NULL, *tail = NULL;
     _room **list;
     char *filename = argv[1], ofn[MAX_LENGHT];
 
@@ -68,14 +67,14 @@ int main(int argc, char **argv)
 
         /* read file, save graph and save walls */
         objective = idx(i, j, C);
-        read_file(fp, &graph, filename, P, L, C, &head, &tail);
+        read_file(fp, &graph, filename, P, L, C, &wall_queue, P, &pusher);
 
         /* validate input data */
         if (!white(0, graph) || !white(objective, graph))
         {
             fprintf(ofp, "-1\n\n");
             free(graph);
-            BFS_empty_queue(&head, &tail);
+            free(wall_queue);
             continue;
         }
 
@@ -87,7 +86,7 @@ int main(int argc, char **argv)
         {
             fprintf(ofp, "0\n\n");
             free(graph);
-            BFS_empty_queue(&head, &tail);
+            free(wall_queue);
             continue;
         }
 

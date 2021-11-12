@@ -1,49 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "queue.h"
 
-int BFS_pop(edge **head, edge **tail)
+int *init_queue(int size)
 {
-    int v;
-    edge *aux = *head;
-    v = aux->v;
-    if(*head == *tail){
-        *head = NULL; 
-        *tail = NULL;
-    }
-    else{
-        *head = (*head)->next;
-    }
-    
-    free(aux);
-    return v;
+    int *queue = (int*) malloc(size * sizeof(int));
+    if(queue == NULL) exit(0);
+    else return queue;
 }
 
-void BFS_push(edge **head, edge **tail, int v)
+void ARRAY_push(int *pusher, int size, int queue[], int v)
 {
-    edge *aux = (edge*) malloc(sizeof(edge));
-    if(aux == NULL) exit(0);
-
-    aux->v = v;
-    aux->next = NULL;
-    if(*head == NULL){
-        *head = aux;
-        *tail = aux;
-    }
-    else{
-        (*tail)->next = aux;
-        *tail = aux;
-    }
+    queue[((*pusher) % size)] = v;
+    (*pusher)++;
     return ;
 }
 
-void BFS_empty_queue(edge **head, edge **tail)
+int ARRAY_pop(int *poper, int size, int queue[])
 {
-    int v;
-    while(*head != NULL)
-        v = BFS_pop(head, tail);
-    v++;
-    return;
+    int v = (*poper);
+    (*poper)++;
+    return queue[v % size];
+}
+
+void free_queue(int queue[])
+{
+    free(queue);
+    return ;
 }
