@@ -17,7 +17,7 @@
 #define MAX_LENGHT 100
 
 /**
- * @brief Main function that controls the program 
+ * @brief Main
  * @param argc argument count 
  * @param argv argument vector 
  * @return 0 if program is successful

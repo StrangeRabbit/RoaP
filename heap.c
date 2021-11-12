@@ -4,10 +4,7 @@
 #include "heap.h"
 
 #define highPri(a, b) (dist[a] < dist[b])
-#define exch(a, b) \
-    t = a;         \
-    a = b;         \
-    b = t
+#define exch(a, b) t = a; a = b; b = t
 
 /**
  * @brief inicializes an array to contain the inderect heap 
